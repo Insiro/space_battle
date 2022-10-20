@@ -41,16 +41,16 @@ function init() {
 /** reset game states */
 function resetGame() {
     gameState = true;
-    player = new Player();
+    // player = new Player(0,0,gltf, ()=>{});
     screen.scene = new THREE.Scene();
     screen.camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
 
-    screen.scene.add(player);
-    for (const meteo of meteos) screen.scene.add(meteo);
-    for (const obj of otherObjets) screen.scene.add(obj);
-    for (const planet of planets) screen.scene.add(planet);
-    for (const item of items) screen.scene.add(item);
-    for (const bullet of bullets) screen.scene.add(bullet);
+    // screen.scene.add(player.gltf.scene);
+    for (const meteo of meteos) screen.scene.add(meteo.gltf.scene);
+    for (const obj of otherObjets) screen.scene.add(obj.gltf.scene);
+    for (const planet of planets) screen.scene.add(planet.gltf.scene);
+    for (const item of items) screen.scene.add(item.gltf.scene);
+    for (const bullet of bullets) screen.scene.add(bullet.gltf.scene);
 }
 
 function animate() {

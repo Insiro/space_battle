@@ -8,6 +8,6 @@ export class Player extends Object {
      * @param { function(object) } collision_callback
      */
     constructor(x, y, gltf, collision_callback) {
-        super(x, y, this.gltf);
+        super(x, y, gltf, collision_callback);
     }
 }
