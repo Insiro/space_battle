@@ -7,7 +7,7 @@ export class Player extends Object {
      * @param {*} gltf
      * @param { function(object) } collision_callback
      */
-    constructor() {
+    constructor(x, y, gltf, collision_callback) {
         super(x, y, this.gltf);
     }
 }
