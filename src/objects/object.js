@@ -12,13 +12,8 @@ export class Object {
         this.collision_callback = collision_callback;
     }
     /**
-     * @param {int} x
-     * @param {int} y
-     */
-    move(x, y) {
-        this.x = x;
-        this.y = y;
-    }
+    /** object moving logic */
+    move() {}
     /**
      * @param {Object} object
      * @returns {boolean}
