@@ -1,0 +1,8 @@
+{
+  "name": "space_battle",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Insiro/space_battle.git",
+  "author": "Insiro <leeon@insiro.me>",
+  "license": "MIT"
+}
