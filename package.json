@@ -1,8 +1,12 @@
 {
   "name": "space_battle",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./server.js",
   "repository": "https://github.com/Insiro/space_battle.git",
   "author": "Insiro <leeon@insiro.me>",
-  "license": "MIT"
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
