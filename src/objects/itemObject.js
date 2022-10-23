@@ -28,6 +28,8 @@ export class Meteor extends Object {
         this.hp = hp;
         this.itemcode = itemcode; // set it's itemcode such as -1 : meteor, 1 : oil, 2: bullet(TODO)
         this.rotation = rotation;
+
+        if(itemcode == 1)//oil
         loader.load('./models/oil/scene.gltf', function(gltf){
         						  this.model = gltf.scene.children[0]; // set this.model to points gltf
         						  this.model.scale.set(1,1,1);
@@ -36,6 +38,30 @@ export class Meteor extends Object {
         						}, undefined, function (error) {
         							console.error(error);
         						});
+        else if(itemcode == -1)
+        {
+
+          loader.load('./models/meteor/scene.gltf', function(gltf){
+          						  this.model = gltf.scene.children[0]; // set this.model to points gltf
+          						  this.model.scale.set(1,1,1);
+          							this.model.position.set(this.x,this.y,this.z);
+          						  scene.add(gltf.scene);
+          						}, undefined, function (error) {
+          							console.error(error);
+          						});
+        }
+        else if(itemcode == 2)
+        {
+
+          loader.load('./models/moon/scene.gltf', function(gltf){
+          						  this.model = gltf.scene.children[0]; // set this.model to points gltf
+          						  this.model.scale.set(1,1,1);
+          							this.model.position.set(this.x,this.y,this.z);
+          						  scene.add(gltf.scene);
+          						}, undefined, function (error) {
+          							console.error(error);
+          						});
+        }
         this.camera = camera; // prospectivecamera
         this.player = player; // player
         this.light = new THREE.PointLight(0xc4c4c4,0.8)
@@ -82,10 +108,10 @@ export class Meteor extends Object {
         }
         else { // Item is active : set it move on its own.
 
-          this.x +=this.initX + getrandomInt(-6,6)*0.1// 	this.initX*(0.10-this.timetokill*0.10)  //* (getRandomInt(1, 2)==2? 1:-1)//*2*( getRandomInt(1, 2)==2? 1:-1) //camera.position.x+ //10+ this.initX*this.timetokill
+          this.x +=this.initX + getRandomInt(-6,6)*0.1// 	this.initX*(0.10-this.timetokill*0.10)  //* (getRandomInt(1, 2)==2? 1:-1)//*2*( getRandomInt(1, 2)==2? 1:-1) //camera.position.x+ //10+ this.initX*this.timetokill
 
-          this.y += this.initY+ getrandomInt(-6,6)*0.1// 	this.initY*(0.10-this.timetokill*0.2) //+0-100*this.timetokill
-          this.z += this.initZ+ getrandomInt(-6,6)*0.1// 	this.initZ* (0.10-this.timetokill*0.10) //* (getRandomInt(1, 2)==2? 1:-1)//this.initZ  + this.timetokill *2 *( getRandomInt(1, 2)==2? 1:-1)// camera.position.z+//10+this.initZ*this.timetokill
+          this.y += this.initY+ getRandomInt(-6,6)*0.1// 	this.initY*(0.10-this.timetokill*0.2) //+0-100*this.timetokill
+          this.z += this.initZ+ getRandomInt(-6,6)*0.1// 	this.initZ* (0.10-this.timetokill*0.10) //* (getRandomInt(1, 2)==2? 1:-1)//this.initZ  + this.timetokill *2 *( getRandomInt(1, 2)==2? 1:-1)// camera.position.z+//10+this.initZ*this.timetokill
 
           this.model.position.set(this.x,this.y,this.z)
 
@@ -95,7 +121,7 @@ export class Meteor extends Object {
 
         console.log(player.inTime, " ", player.hp)
 
-        // Can re-use this code to check bullet 
+        // Can re-use this code to check bullet
         if(this.x-camera.position.x <10 && this.x-camera.position.x > -10 && this.y - camera.position.y > -10&& this.y - camera.position.y< 10 && this.z - camera.position.z > -10&& this.z - camera.position.z< 10)
         { // collision check function : check on every move function.
           console.log("Player get hit by meteor " + key +" !")
