@@ -62,7 +62,7 @@ var items = {
 		timeleft :5,
 		rotation : 0.1,
 		reset : 10,
-		speedtogo:0,
+		timetokill:0,
 		 model : null,
 
 		},
@@ -78,7 +78,7 @@ meteor1 : {
 hp:3,
 rotation : 0.5,
 reset : 10,
-speedtogo:0,
+timetokill:0,
  model : null,
 
 },
@@ -93,7 +93,7 @@ meteor2 : {
  hp:3,
  rotation : 0.3,
  reset : 10,
- speedtogo:0,
+ timetokill:0,
  model : null
 },
 
@@ -108,7 +108,7 @@ meteor3 : {
  hp:3,
  rotation : 0.6,
  reset : 10,
- speedtogo:0,
+ timetokill:0,
  model : null
 },
 
@@ -123,7 +123,7 @@ meteor4 : {
  hp:2,
  rotation : 0.7,
  reset : 10,
- speedtogo:0,
+ timetokill:0,
  model : null
 },
 
@@ -136,11 +136,42 @@ meteor5 : {
  y : 50,
  z: 50,
  hp:3,
- rotation : 0.125,
+ rotation : 0.001,
  reset : 10,
- speedtogo:0,
+ timetokill:0,
  model : null
 },
+
+meteor6 : {
+
+		initX : 30,
+		initY : 100,
+		initZ : -30,
+ x : 50,
+ y : 50,
+ z: 50,
+ hp:3,
+ rotation : 0.001,
+ reset : 10,
+ timetokill:0,
+ model : null
+},
+
+meteor7 : {
+
+		initX : 30,
+		initY : 100,
+		initZ : -30,
+ x : 50,
+ y : 50,
+ z: 50,
+ hp:3,
+ rotation : 0.001,
+ reset : 10,
+ timetokill:0,
+ model : null
+},
+
 
 };
 
@@ -186,7 +217,7 @@ meteor5 : {
 
 			loader.load('./models/moon/scene.gltf', function(gltf){
 			  meteors.meteor3.model = gltf.scene.children[0];
-			  meteors.meteor3.model.scale.set(1,2,1);
+			  meteors.meteor3.model.scale.set(1,1,1);
 				meteors.meteor3.model.position.set(10,20,30);
 			  scene.add(gltf.scene);
 			}, undefined, function (error) {
@@ -195,7 +226,7 @@ meteor5 : {
 
 			loader.load('./models/moon/scene.gltf', function(gltf){
 			  meteors.meteor4.model = gltf.scene.children[0];
-			  meteors.meteor4.model.scale.set(2,2,1);
+			  meteors.meteor4.model.scale.set(1,1,1);
 				meteors.meteor4.model.position.set(50,0,5);
 			  scene.add(gltf.scene);
 			}, undefined, function (error) {
@@ -204,12 +235,32 @@ meteor5 : {
 
 						loader.load('./models/moon/scene.gltf', function(gltf){
 						  meteors.meteor5.model = gltf.scene.children[0];
-						  meteors.meteor5.model.scale.set(2,2,1);
+						  meteors.meteor5.model.scale.set(1,1,1);
 							meteors.meteor5.model.position.set(50,0,5);
 						  scene.add(gltf.scene);
 						}, undefined, function (error) {
 							console.error(error);
-						}); 
+						});
+
+
+      						loader.load('./models/meteor2/scene.gltf', function(gltf){
+      						  meteors.meteor6.model = gltf.scene.children[0];
+      						  meteors.meteor6.model.scale.set(0.07, 0.07,0.07);
+      							meteors.meteor6.model.position.set(100,0,5);
+      						  scene.add(gltf.scene);
+      						}, undefined, function (error) {
+      							console.error(error);
+      						});
+
+            			loader.load('./models/meteor3/scene.gltf', function(gltf){
+            			  meteors.meteor7.model = gltf.scene.children[0];
+            			  meteors.meteor7.model.scale.set(0.035, 0.035,0.035);
+            				meteors.meteor7.model.position.set(1000,0,5);
+            			  scene.add(gltf.scene);
+            			}, undefined, function (error) {
+            				console.error(error);
+            			});
+
 // Meshes index
 var meshes = {};
 
@@ -350,26 +401,26 @@ function render(){
 	for( var _key in meteors){
 		(function(key){
 			camera.updateMatrixWorld();
-			meteors[key].model.rotation.x -= meteors[key].rotation
-			if (meteors[key].speedtogo >0)
-			meteors[key].speedtogo -=0.05
-			if(meteors[key].speedtogo <=0)
+			meteors[key].model.rotation.z -= meteors[key].rotation*meteors[key].timetokill
+			if (meteors[key].timetokill >0)
+			meteors[key].timetokill -=0.05
+			if(meteors[key].timetokill <=0)
 			{
 
 				meteors[key].reset -=0.1
 				if(meteors[key].reset <0)
 				{
-								meteors[key].speedtogo =  getRandomInt(15, 30)
-					meteors[key].initX = camera.position.x+ + getRandomInt(20, 100) * (getRandomInt(1, 2)==2? 1:-1)
+								meteors[key].timetokill =  getRandomInt(15, 30)
+					meteors[key].initX = camera.position.x+ + getRandomInt(70, 100) * (getRandomInt(1, 2)==2? 1:-1)
 		//			meteors[key].y =  getRandomInt(100, 1000) * getRandomInt(1, 2)==2? 1:-1
-					meteors[key].initZ  =  camera.position.z+getRandomInt(20, 100) *( getRandomInt(1, 2)==2? 1:-1)
+					meteors[key].initZ  =  camera.position.z+getRandomInt(70, 100) *( getRandomInt(1, 2)==2? 1:-1)
 					meteors[key].reset = 5
 				}
 			}
 
-			meteors[key].x = 	meteors[key].initX // +meteors[key].speedtogo *0.05  //camera.position.x+ //5+ meteors[key].initX*meteors[key].speedtogo
-			meteors[key].y = camera.position.y //camera.position.y//+0-100*meteors[key].speedtogo
-			meteors[key].z = 	meteors[key].initZ // + meteors[key].speedtogo *0.05 // camera.position.z+//5+meteors[key].initZ*meteors[key].speedtogo
+			meteors[key].x = 	meteors[key].initX  +meteors[key].timetokill *2  //camera.position.x+ //5+ meteors[key].initX*meteors[key].timetokill
+			meteors[key].y = camera.position.y //camera.position.y//+0-100*meteors[key].timetokill
+			meteors[key].z = 	meteors[key].initZ  + meteors[key].timetokill *2 // camera.position.z+//5+meteors[key].initZ*meteors[key].timetokill
 		meteors[key].model.position.set(meteors[key].x,meteors[key].y,meteors[key].z)
 
 
@@ -379,7 +430,7 @@ function render(){
 					{
 						console.log("Player get hit by meteor " + key +" !")
 						meteors[key].reset = 0;
-						meteors[key].speedtogo = 0;
+						meteors[key].timetokill = 0;
 						if( player.inTime <=0)
 						{
 							player.inTime = 3;
@@ -393,7 +444,7 @@ function render(){
 						}
 						//TODO: HIT EFFECT
 					}
-	//	 console.log(key+ " :" + meteors[key].x + " " + meteors[key].y + " "+ meteors[key].z+"STG "+meteors[key].speedtogo+" RS: "+ meteors[key].reset + "IS : "+ meteors[key].initX + " "+meteors[key].initZ)
+	//	 console.log(key+ " :" + meteors[key].x + " " + meteors[key].y + " "+ meteors[key].z+"STG "+meteors[key].timetokill+" RS: "+ meteors[key].reset + "IS : "+ meteors[key].initX + " "+meteors[key].initZ)
 		})(_key);
 	}
 
@@ -403,16 +454,16 @@ function render(){
 			for( var _key in items){
 				(function(key){
 					camera.updateMatrixWorld();
-					items[key].model.rotation.z -= items[key].rotation
-					if (items[key].speedtogo >0)
-					items[key].speedtogo -=0.05
-					if(items[key].speedtogo <=0)
+					items[key].model.rotation.z -= items[key].rotation * items[key].timetokill *0.06
+					if (items[key].timetokill >0)
+					items[key].timetokill -=0.05
+					if(items[key].timetokill <=0)
 					{
 
 						items[key].reset -=0.1
 						if(items[key].reset <0)
 						{
-										items[key].speedtogo =  getRandomInt(15, 30)
+										items[key].timetokill =  getRandomInt(15, 30)
 							items[key].initX = camera.position.x+ + getRandomInt(20, 100) * (getRandomInt(1, 2)==2? 1:-1)
 				//			items[key].y =  getRandomInt(100, 1000) * getRandomInt(1, 2)==2? 1:-1
 							items[key].initZ  =  camera.position.z+getRandomInt(20, 100) *( getRandomInt(1, 2)==2? 1:-1)
@@ -420,9 +471,9 @@ function render(){
 						}
 					}
 
-					items[key].x = 	items[key].initX // +items[key].speedtogo *0.05  //camera.position.x+ //5+ items[key].initX*items[key].speedtogo
-					items[key].y = camera.position.y //camera.position.y//+0-100*items[key].speedtogo
-					items[key].z = 	items[key].initZ // + items[key].speedtogo *0.05 // camera.position.z+//5+items[key].initZ*items[key].speedtogo
+					items[key].x = 	items[key].initX // +items[key].timetokill *0.05  //camera.position.x+ //5+ items[key].initX*items[key].timetokill
+					items[key].y = camera.position.y //camera.position.y//+0-100*items[key].timetokill
+					items[key].z = 	items[key].initZ // + items[key].timetokill *0.05 // camera.position.z+//5+items[key].initZ*items[key].timetokill
 				items[key].model.position.set(items[key].x,items[key].y,items[key].z)
 
 
@@ -431,7 +482,7 @@ function render(){
 							if(items[key].x-camera.position.x <5 && items[key].x-camera.position.x > -5  && items[key].z - camera.position.z > -5&& items[key].z - camera.position.z< 5)
 							{
 								console.log("Player get item " + key +" !")
-								items[key].speedtogo = 0;
+								items[key].timetokill = 0;
 								items[key].reset =0;
 								if( key == "oil1")
 								{
@@ -444,7 +495,7 @@ function render(){
 
 								//TODO: HIT EFFECT
 							}
-			//	 console.log(key+ " :" + items[key].x + " " + items[key].y + " "+ items[key].z+"STG "+items[key].speedtogo+" RS: "+ items[key].reset + "IS : "+ items[key].initX + " "+items[key].initZ)
+			//	 console.log(key+ " :" + items[key].x + " " + items[key].y + " "+ items[key].z+"STG "+items[key].timetokill+" RS: "+ items[key].reset + "IS : "+ items[key].initX + " "+items[key].initZ)
 				})(_key);
 			}
 
