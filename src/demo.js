@@ -80,6 +80,7 @@ rotation : 0.5,
 reset : 10,
 timetokill:0,
  model : null,
+ light :  new THREE.PointLight(0xc4c4c4,0.8)
 
 },
 
@@ -94,7 +95,8 @@ meteor2 : {
  rotation : 0.3,
  reset : 10,
  timetokill:0,
- model : null
+ model : null,
+ light :   new THREE.PointLight(0xc4c4c4,0.8)
 },
 
 meteor3 : {
@@ -109,7 +111,8 @@ meteor3 : {
  rotation : 0.6,
  reset : 10,
  timetokill:0,
- model : null
+ model : null,
+ light :   new THREE.PointLight(0xc4c4c4,0.8)
 },
 
 meteor4 : {
@@ -124,7 +127,8 @@ meteor4 : {
  rotation : 0.7,
  reset : 10,
  timetokill:0,
- model : null
+ model : null,
+ light :   new THREE.PointLight(0xc4c4c4,0.8)
 },
 
 meteor5 : {
@@ -139,7 +143,8 @@ meteor5 : {
  rotation : 0.001,
  reset : 10,
  timetokill:0,
- model : null
+ model : null,
+ light :   new THREE.PointLight(0xc4c4c4,0.8)
 },
 
 meteor6 : {
@@ -154,7 +159,8 @@ meteor6 : {
  rotation : 0.001,
  reset : 10,
  timetokill:0,
- model : null
+ model : null,
+ light :   new THREE.PointLight(0xc4c4c4,0.8)
 },
 
 meteor7 : {
@@ -169,7 +175,8 @@ meteor7 : {
  rotation : 0.001,
  reset : 10,
  timetokill:0,
- model : null
+ model : null,
+ light :   new THREE.PointLight(0xc4c4c4,0.8)
 },
 
 
@@ -196,7 +203,7 @@ meteor7 : {
 			}, undefined, function (error) {
 				console.error(error);
 			});
-			loader.load('./models/moon/scene.gltf', function(gltf){
+			loader.load('./models/meteor/scene.gltf', function(gltf){
 			  meteors.meteor1.model = gltf.scene.children[0];
 			  meteors.meteor1.model.scale.set(2,2,1);
 				meteors.meteor1.modelposition.set(50,0,5);
@@ -205,7 +212,7 @@ meteor7 : {
 				console.error(error);
 			});
 
-			loader.load('./models/moon/scene.gltf', function(gltf){
+			loader.load('./models/meteor/scene.gltf', function(gltf){
 				meteors.meteor2.model = gltf.scene.children[0];
 				meteors.meteor2.model.scale.set(2,2,1);
 				meteors.meteor2.model.position.set(20,0,5);
@@ -215,7 +222,7 @@ meteor7 : {
 			});
 
 
-			loader.load('./models/moon/scene.gltf', function(gltf){
+			loader.load('./models/meteor/scene.gltf', function(gltf){
 			  meteors.meteor3.model = gltf.scene.children[0];
 			  meteors.meteor3.model.scale.set(1,1,1);
 				meteors.meteor3.model.position.set(10,20,30);
@@ -224,7 +231,7 @@ meteor7 : {
 				console.error(error);
 			});
 
-			loader.load('./models/moon/scene.gltf', function(gltf){
+			loader.load('./models/meteor/scene.gltf', function(gltf){
 			  meteors.meteor4.model = gltf.scene.children[0];
 			  meteors.meteor4.model.scale.set(1,1,1);
 				meteors.meteor4.model.position.set(50,0,5);
@@ -233,7 +240,7 @@ meteor7 : {
 				console.error(error);
 			});
 
-						loader.load('./models/moon/scene.gltf', function(gltf){
+						loader.load('./models/meteor/scene.gltf', function(gltf){
 						  meteors.meteor5.model = gltf.scene.children[0];
 						  meteors.meteor5.model.scale.set(1,1,1);
 							meteors.meteor5.model.position.set(50,0,5);
@@ -243,18 +250,18 @@ meteor7 : {
 						});
 
 
-      						loader.load('./models/meteor2/scene.gltf', function(gltf){
+      						loader.load('./models/meteor/scene.gltf', function(gltf){
       						  meteors.meteor6.model = gltf.scene.children[0];
-      						  meteors.meteor6.model.scale.set(0.07, 0.07,0.07);
+      						  meteors.meteor6.model.scale.set(1,1,1);
       							meteors.meteor6.model.position.set(100,0,5);
       						  scene.add(gltf.scene);
       						}, undefined, function (error) {
       							console.error(error);
       						});
 
-            			loader.load('./models/meteor3/scene.gltf', function(gltf){
+            			loader.load('./models/meteor/scene.gltf', function(gltf){
             			  meteors.meteor7.model = gltf.scene.children[0];
-            			  meteors.meteor7.model.scale.set(0.035, 0.035,0.035);
+            			  meteors.meteor7.model.scale.set(1, 1,1);
             				meteors.meteor7.model.position.set(1000,0,5);
             			  scene.add(gltf.scene);
             			}, undefined, function (error) {
@@ -325,19 +332,6 @@ function init(){
 	crateBumpMap = textureLoader.load("crate0/crate0_bump.jpg");
 	crateNormalMap = textureLoader.load("crate0/crate0_normal.jpg");
 
-	crate = new THREE.Mesh(
-		new THREE.BoxGeometry(3,3,3),
-		new THREE.MeshPhongMaterial({
-			color:0xffffff,
-			map:crateTexture,
-			bumpMap:crateBumpMap,
-			normalMap:crateNormalMap
-		})
-	);
-	scene.add(crate);
-	crate.position.set(2.5, 3/2, 2.5);
-	crate.receiveShadow = true;
-	crate.castShadow = true;
 
 	// Load models
 	// REMEMBER: Loading in Javascript is asynchronous, so you need
@@ -371,7 +365,6 @@ scene.background = bgTexture;
 
 // Runs when all resources are loaded
 function onResourcesLoaded(){
-
 }
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -379,7 +372,6 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 function render(){
-
 	// Play the loading screen until resources are loaded.
 	if( RESOURCES_LOADED == false ){
 		requestAnimationFrame(render);
@@ -397,36 +389,65 @@ function render(){
 	var time = Date.now() * 0.0005;
 	var delta = clock.getDelta();
 
+	///console.log(getRandomInt(-2, 2)+" "+(getRandomInt(-2, 2)>0? 1:-1))
 
 	for( var _key in meteors){
 		(function(key){
 			camera.updateMatrixWorld();
-			meteors[key].model.rotation.z -= meteors[key].rotation*meteors[key].timetokill
+			meteors[key].model.rotation.z -= meteors[key].rotation*0.05
 			if (meteors[key].timetokill >0)
 			meteors[key].timetokill -=0.05
+
+
 			if(meteors[key].timetokill <=0)
 			{
+				meteors[key].reset -= 0.1
 
-				meteors[key].reset -=0.1
+								meteors[key].model.scale.set(0,0,0) //* (getRandomInt(1, 2)==2? 1:-1)//*2*( getRandomInt(1, 2)==2? 1:-1) //camera.position.x+ //5+ meteors[key].initX*meteors[key].timetokill
+
+								meteors[key].y = 1000 //+0-100*meteors[key].timetokill
+								meteors[key].z = 	1000 //* (getRandomInt(1, 2)==2? 1:-1)//meteors[key].initZ  + meteors[key].timetokill *2 *( getRandomInt(1, 2)==2? 1:-1)// camera.position.z+//5+meteors[key].initZ*meteors[key].timetokill
+
+
+
 				if(meteors[key].reset <0)
 				{
-								meteors[key].timetokill =  getRandomInt(15, 30)
-					meteors[key].initX = camera.position.x+ + getRandomInt(70, 100) * (getRandomInt(1, 2)==2? 1:-1)
-		//			meteors[key].y =  getRandomInt(100, 1000) * getRandomInt(1, 2)==2? 1:-1
-					meteors[key].initZ  =  camera.position.z+getRandomInt(70, 100) *( getRandomInt(1, 2)==2? 1:-1)
-					meteors[key].reset = 5
+
+					meteors[key].initX = getRandomInt(0,3)*0.1* (getRandomInt(-2, 2)>0? 1:-1)
+										meteors[key].initY = getRandomInt(0,3)*0.1* (getRandomInt(-2, 2)>0? 1:-1)
+					meteors[key].initZ = getRandomInt(0,3)*0.1 * (getRandomInt(-2, 2)>0? 1:-1)
+					meteors[key].x = camera.position.x-50*(getRandomInt(-2, 2)>0? 1:-1)
+								meteors[key].y= camera.position.y-50*(getRandomInt(-2, 2)>0? 1:-1)//*meteors[key].initX  //+getRandomInt(-250, 250) // * (getRandomInt(1, 2)==2? 1:-1)
+					//meteors[key].initY =  camera.position.y + getRandomInt(10,20) * (getRandomInt(1, 2)==2? 1:-1)
+					meteors[key].z  = camera.position.z-50*(getRandomInt(-2, 2)>0? 1:-1)//*meteors[key].initZ// +   getRandomInt(-250, 250)// *( getRandomInt(1, 2)==2? 1:-1)
+					//meteors[key].x =getRandomInt(-10, 10) 	//meteors[key].initX*(0.5-meteors[key].timetokill)  //* (getRandomInt(1, 2)==2? 1:-1)//*2*( getRandomInt(1, 2)==2? 1:-1) //camera.position.x+ //5+ meteors[key].initX*meteors[key].timetokill
+		 			//	meteors[key].y = 	meteors[key].initY*(0.5-meteors[key].timetokill) //+0-100*meteors[key].timetokill
+					//meteors[key].z =getRandomInt(-10, 10) 	//meteors[key].initZ* (0.5-meteors[key].timetokill) //* (getRandomInt(1, 2)==2? 1:-1)//meteors[key].initZ  + meteors[key].timetokill *2 *( getRandomInt(1, 2)==2? 1:-1)// camera.position.z+//5+meteors[key].initZ*meteors[key].timetokill
+
+								meteors[key].model.scale.set(1,1,1)
+					meteors[key].reset = 1
+					meteors[key].timetokill =  getRandomInt(20,30)///getRandomInt(10,11)
+		 			console.log(key, "ini  ", meteors[key].initX, " ", meteors[key].initZ)
+					console.log(key +"  x "+(meteors[key].x-camera.position.x)  + " z "+(meteors[key].z - camera.position.z) + "COND 1 X "+ (meteors[key].x-camera.position.x <10 && meteors[key].x-camera.position.x > -10) +"COND Z : "+( meteors[key].z - camera.position.z > -10 && meteors[key].z - camera.position.z< 10))
+
 				}
 			}
+			else {
 
-			meteors[key].x = 	meteors[key].initX  +meteors[key].timetokill *2  //camera.position.x+ //5+ meteors[key].initX*meteors[key].timetokill
-			meteors[key].y = camera.position.y //camera.position.y//+0-100*meteors[key].timetokill
-			meteors[key].z = 	meteors[key].initZ  + meteors[key].timetokill *2 // camera.position.z+//5+meteors[key].initZ*meteors[key].timetokill
-		meteors[key].model.position.set(meteors[key].x,meteors[key].y,meteors[key].z)
+				meteors[key].x +=meteors[key].initX+ getRandomInt(-12,12)*0.1// 	meteors[key].initX*(0.5-meteors[key].timetokill*0.5)  //* (getRandomInt(1, 2)==2? 1:-1)//*2*( getRandomInt(1, 2)==2? 1:-1) //camera.position.x+ //5+ meteors[key].initX*meteors[key].timetokill
 
+				meteors[key].y +=meteors[key].initY+ getRandomInt(-12,12)*0.1/// 	meteors[key].initY*(0.5-meteors[key].timetokill*0.2) //+0-100*meteors[key].timetokill
+				meteors[key].z += meteors[key].initZ+ getRandomInt(-12,12)*0.1// 	meteors[key].initZ* (0.5-meteors[key].timetokill*0.5) //* (getRandomInt(1, 2)==2? 1:-1)//meteors[key].initZ  + meteors[key].timetokill *2 *( getRandomInt(1, 2)==2? 1:-1)// camera.position.z+//5+meteors[key].initZ*meteors[key].timetokill
+
+		 		meteors[key].model.position.set(meteors[key].x,meteors[key].y,meteors[key].z)
+
+			meteors[key].light.position.set(meteors[key].x+25,meteors[key].y+25,meteors[key].z+25);
+
+		scene.add(meteors[key].light);
 
 			console.log(player.inTime, " ", player.hp)
-			console.log(key +"  x "+(meteors[key].x-camera.position.x)  + " z "+(meteors[key].z - camera.position.z) + "COND 1 X "+ (meteors[key].x-camera.position.x <10 && meteors[key].x-camera.position.x > -10) +"COND Z : "+( meteors[key].z - camera.position.z > -10 && meteors[key].z - camera.position.z< 10))
-					if(meteors[key].x-camera.position.x <5 && meteors[key].x-camera.position.x > -5  && meteors[key].z - camera.position.z > -5&& meteors[key].z - camera.position.z< 5)
+
+			if(meteors[key].x-camera.position.x <10 && meteors[key].x-camera.position.x > -10 &&meteors[key].y-camera.position.y <10 && meteors[key].y-camera.position.y > -10  && meteors[key].z - camera.position.z > -10&& meteors[key].z - camera.position.z< 10)
 					{
 						console.log("Player get hit by meteor " + key +" !")
 						meteors[key].reset = 0;
@@ -444,6 +465,8 @@ function render(){
 						}
 						//TODO: HIT EFFECT
 					}
+
+				}
 	//	 console.log(key+ " :" + meteors[key].x + " " + meteors[key].y + " "+ meteors[key].z+"STG "+meteors[key].timetokill+" RS: "+ meteors[key].reset + "IS : "+ meteors[key].initX + " "+meteors[key].initZ)
 		})(_key);
 	}
@@ -476,10 +499,7 @@ function render(){
 					items[key].z = 	items[key].initZ // + items[key].timetokill *0.05 // camera.position.z+//5+items[key].initZ*items[key].timetokill
 				items[key].model.position.set(items[key].x,items[key].y,items[key].z)
 
-
-					console.log(player.inTime, " ", player.hp)
-					console.log(key +"  x "+(items[key].x-camera.position.x)  + " z "+(items[key].z - camera.position.z) + "COND 1 X "+ (items[key].x-camera.position.x <10 && items[key].x-camera.position.x > -10) +"COND Z : "+( items[key].z - camera.position.z > -10 && items[key].z - camera.position.z< 10))
-							if(items[key].x-camera.position.x <5 && items[key].x-camera.position.x > -5  && items[key].z - camera.position.z > -5&& items[key].z - camera.position.z< 5)
+ 							if(items[key].x-camera.position.x <5 && items[key].x-camera.position.x > -5  && items[key].z - camera.position.z > -5&& items[key].z - camera.position.z< 5)
 							{
 								console.log("Player get item " + key +" !")
 								items[key].timetokill = 0;
@@ -516,9 +536,6 @@ function render(){
 		var temp = 0.00005;
 		temp *= 0.001;
 		planets.moon.model.rotation.x += 0.01;
-		mesh.rotation.x += 0.01;
-		mesh.rotation.y += 0.02;
-		crate.rotation.y += 0.01;
 		// Uncomment for absurdity!
 		// meshes["pirateship"].rotation.z += 0.01;
 

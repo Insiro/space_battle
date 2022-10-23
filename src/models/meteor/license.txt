@@ -1,11 +1,11 @@
 Model Information:
-* title:	MET02 Meteor
-* source:	https://sketchfab.com/3d-models/met02-meteor-08ebcae74ce445348fda1acd37de682d
-* author:	Hodisfut (https://sketchfab.com/Hodisfut)
+* title:	alien robot
+* source:	https://sketchfab.com/3d-models/alien-robot-8c96cd652f534739a95de9722e060b34
+* author:	afzaeian (https://sketchfab.com/afzaeian)
 
 Model License:
 * license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 * requirements:	Author must be credited. Commercial use is allowed.
 
 If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
-This work is based on "MET02 Meteor" (https://sketchfab.com/3d-models/met02-meteor-08ebcae74ce445348fda1acd37de682d) by Hodisfut (https://sketchfab.com/Hodisfut) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+This work is based on "alien robot" (https://sketchfab.com/3d-models/alien-robot-8c96cd652f534739a95de9722e060b34) by afzaeian (https://sketchfab.com/afzaeian) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
