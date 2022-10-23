@@ -40,6 +40,8 @@ var models = {
     },
 };
 
+var spaceship;
+
 // Meshes index
 var meshes = {};
 
@@ -179,10 +181,17 @@ function onResourcesLoaded() {
     scene.add(meshes["pirateship"]);
 
     // player weapon
-    meshes["playerweapon"] = models.uzi.mesh.clone();
-    meshes["playerweapon"].position.set(0, 2, 0);
-    meshes["playerweapon"].scale.set(10, 10, 10);
-    scene.add(meshes["playerweapon"]);
+
+    const loader = new THREE.GLTFLoader();
+	loader.load('./models/free_spaceship_unitron/scene.gltf', function(gltf){
+		spaceship = gltf.scene.children[0];
+		spaceship.scale.set(0.02, 0.02, 0.02);
+		spaceship.position.set(0, 2, 0);
+		scene.add(gltf.scene);
+	},undefined, function (error) {
+		console.error(error);
+	});
+
 }
 
 function animate() {
@@ -242,8 +251,8 @@ function animate() {
         camera.position.x += Math.sin(camera.rotation.y - Math.PI / 2) * player.speed;
         camera.position.z += -Math.cos(camera.rotation.y - Math.PI / 2) * player.speed;
     } else {
-        camera.position.x -= Math.sin(camera.rotation.y) * player.speed;
-        camera.position.z -= -Math.cos(camera.rotation.y) * player.speed;
+        // camera.position.x -= Math.sin(camera.rotation.y) * player.speed;
+        // camera.position.z -= -Math.cos(camera.rotation.y) * player.speed;
     }
 
     if (keyboard[37]) {
@@ -264,7 +273,7 @@ function animate() {
         // var bullet = models.pirateship.mesh.clone();
 
         // position the bullet to come from the player's weapon
-        bullet.position.set(meshes["playerweapon"].position.x, meshes["playerweapon"].position.y + 0.15, meshes["playerweapon"].position.z);
+        bullet.position.set(spaceship.position.x, spaceship.position.y + 0.15, spaceship.position.z);
 
         // set the velocity of the bullet
         bullet.velocity = new THREE.Vector3(-Math.sin(camera.rotation.y), 0, Math.cos(camera.rotation.y));
@@ -286,12 +295,12 @@ function animate() {
     if (player.canShoot > 0) player.canShoot -= 1;
 
     // position the gun in front of the camera
-    meshes["playerweapon"].position.set(
+    spaceship.position.set(
         camera.position.x - Math.sin(camera.rotation.y + Math.PI / 6) * 0.75,
-        camera.position.y - 0.5 + Math.sin(time * 4 + camera.position.x + camera.position.z) * 0.01,
+        camera.position.y - Math.sin(time * 4 + camera.position.x + camera.position.z) * 0.01,
         camera.position.z + Math.cos(camera.rotation.y + Math.PI / 6) * 0.75
     );
-    meshes["playerweapon"].rotation.set(camera.rotation.x, camera.rotation.y - Math.PI, camera.rotation.z);
+    spaceship.rotation.set(camera.rotation.x - 90, camera.rotation.y + 90, camera.rotation.z);
 
     renderer.render(scene, camera);
 }
