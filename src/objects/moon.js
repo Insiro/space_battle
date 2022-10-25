@@ -9,4 +9,7 @@ export class Moon extends Object {
     z = 20;
     model = null;
     scale = [2, 2, 2];
+    move() {
+        this.model.rotation.x += 0.01;
+    }
 }

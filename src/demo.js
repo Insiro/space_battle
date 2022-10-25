@@ -2,11 +2,11 @@ import { loadObjects } from "./objects/object.js";
 import { Meteor } from "./objects/meteor.js";
 import { Oil } from "./objects/item/oil.js";
 import { Moon } from "./objects/moon.js";
+import { Player } from "./objects/player.js";
 var scene, camera, renderer, mesh;
 var meshFloor, ambientLight, light;
-let clock, crateBumpMap, crateNormalMap, crateTexture;
 var keyboard = {};
-var player = { height: 1.8, speed: 0.2, turnSpeed: Math.PI * 0.02, canShoot: 0, hp: 3, Score: 0, inTime: 0 };
+let player = new Player();
 var USE_WIREFRAME = false;
 
 var loadingScreen = {
@@ -38,9 +38,9 @@ async function init() {
     await loadObjects(items, gltfloader, scene);
     await loadObjects(planets, gltfloader, scene);
     camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
-    clock = new THREE.Clock();
+    player.camera = camera;
 
-    let light3 = new THREE.PointLight(0xc4c4c4, 0.8);
+    const light3 = new THREE.PointLight(0xc4c4c4, 0.8);
     light3.position.set(50, 50, 50);
     scene.add(light3);
 
@@ -55,7 +55,6 @@ async function init() {
     loadingManager.onLoad = function () {
         console.log("loaded all resources");
         RESOURCES_LOADED = true;
-        onResourcesLoaded();
     };
 
     mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME }));
@@ -80,9 +79,7 @@ async function init() {
     scene.add(light);
 
     var textureLoader = new THREE.TextureLoader(loadingManager);
-    crateTexture = textureLoader.load("crate0/crate0_diffuse.jpg");
-    crateBumpMap = textureLoader.load("crate0/crate0_bump.jpg");
-    crateNormalMap = textureLoader.load("crate0/crate0_normal.jpg");
+    let crateNormalMap = textureLoader.load("crate0/crate0_normal.jpg");
 
     // Load models
     // REMEMBER: Loading in Javascript is asynchronous, so you need
@@ -106,13 +103,8 @@ async function init() {
     scene.background = bgTexture;
     render();
 }
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
+
 // Runs when all resources are loaded
-function onResourcesLoaded() {}
 
 function render() {
     // Play the loading screen until resources are loaded.
@@ -132,16 +124,9 @@ function render() {
     for (const item of items) item.move(camera, player);
 
     // item code ends here
+    player.move();
 
-    if (player.inTime > 0) {
-        player.inTime -= 0.05;
-    } else {
-        player.speed = 0.2;
-        player.inTime = 0;
-    }
-    var temp = 0.00005;
-    temp *= 0.001;
-    planets[0].model.rotation.x += 0.01;
+    for (const planet of planets) planet.move();
     // Uncomment for absurdity!
     // meshes["pirateship"].rotation.z += 0.01;
 
@@ -165,36 +150,12 @@ function render() {
 }
 
 function keyboardAction() {
-    if (keyboard[87]) {
-        // W key
-        camera.position.x -= Math.sin(camera.rotation.y) * 2 * player.speed;
-        camera.position.z -= -Math.cos(camera.rotation.y) * player.speed;
-    } else if (keyboard[83]) {
-        // S key
-        camera.position.x -= Math.sin(camera.rotation.y) * 0.5 * player.speed;
-        camera.position.z -= -Math.cos(camera.rotation.y) * player.speed;
-    } else if (keyboard[65]) {
-        // A key
-
-        camera.position.x -= Math.sin(camera.rotation.y) * 2 * player.speed;
-        camera.position.x += Math.sin(camera.rotation.y + Math.PI / 2) * player.speed;
-        camera.position.z += -Math.cos(camera.rotation.y + Math.PI / 2) * player.speed;
-    } else if (keyboard[68]) {
-        // D key
-
-        camera.position.x -= Math.sin(camera.rotation.y) * 2 * player.speed;
-        camera.position.x += Math.sin(camera.rotation.y - Math.PI / 2) * player.speed;
-        camera.position.z += -Math.cos(camera.rotation.y - Math.PI / 2) * player.speed;
-    }
-
-    if (keyboard[37]) {
-        // left arrow key
-        camera.rotation.y -= player.turnSpeed;
-    }
-    if (keyboard[39]) {
-        // right arrow key
-        camera.rotation.y += player.turnSpeed;
-    }
+    if (keyboard[87]) player.key_w();
+    else if (keyboard[83]) player.key_s();
+    else if (keyboard[65]) player.key_a();
+    else if (keyboard[68]) player.key_d();
+    if (keyboard[37]) player.key_lr(true);
+    if (keyboard[39]) player.key_lr(false);
 
     // shoot a bullet
     if (keyboard[32] && player.canShoot <= 0) {
