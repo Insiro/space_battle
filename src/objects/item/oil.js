@@ -1,5 +1,5 @@
-import { Object } from "./object.js";
-export class Oil extends Object {
+import { Item } from "./item.js";
+export class Oil extends Item {
     gltf_path = "./models/oil/scene.gltf";
     initX = 100;
     initY = 0;

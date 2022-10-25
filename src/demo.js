@@ -1,6 +1,6 @@
 import { loadObjects } from "./objects/object.js";
 import { Meteor } from "./objects/meteor.js";
-import { Oil } from "./objects/oil.js";
+import { Oil } from "./objects/item/oil.js";
 import { Moon } from "./objects/moon.js";
 var scene, camera, renderer, mesh;
 var meshFloor, ambientLight, light;
@@ -23,7 +23,6 @@ var RESOURCES_LOADED = false;
 
 var planets = [new Moon()];
 var items = [new Oil()];
-
 var meteors = [new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
 
 // Meshes index
@@ -107,14 +106,14 @@ async function init() {
     scene.background = bgTexture;
     render();
 }
-
-// Runs when all resources are loaded
-function onResourcesLoaded() {}
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
 }
+// Runs when all resources are loaded
+function onResourcesLoaded() {}
+
 function render() {
     // Play the loading screen until resources are loaded.
     if (RESOURCES_LOADED == false) {
@@ -129,122 +128,8 @@ function render() {
     }
 
     requestAnimationFrame(render);
-
-    for (var _key in meteors) {
-        (function (key) {
-            camera.updateMatrixWorld();
-            meteors[key].model.rotation.z -= meteors[key].rotation * 0.05;
-            if (meteors[key].timetokill > 0) meteors[key].timetokill -= 0.05;
-
-            if (meteors[key].timetokill <= 0) {
-                meteors[key].reset -= 0.1;
-
-                meteors[key].model.scale.set(0, 0, 0);
-
-                meteors[key].y = 1000;
-                meteors[key].z = 1000;
-
-                if (meteors[key].reset < 0) {
-                    meteors[key].initX = getRandomInt(0, 3) * 0.1 * (getRandomInt(-2, 2) > 0 ? 1 : -1);
-                    meteors[key].initY = getRandomInt(0, 3) * 0.1 * (getRandomInt(-2, 2) > 0 ? 1 : -1);
-                    meteors[key].initZ = getRandomInt(0, 3) * 0.1 * (getRandomInt(-2, 2) > 0 ? 1 : -1);
-                    meteors[key].x = camera.position.x - 50 * (getRandomInt(-2, 2) > 0 ? 1 : -1);
-                    meteors[key].y = camera.position.y - 50 * (getRandomInt(-2, 2) > 0 ? 1 : -1);
-                    meteors[key].z = camera.position.z - 50 * (getRandomInt(-2, 2) > 0 ? 1 : -1);
-
-                    meteors[key].model.scale.set(1, 1, 1);
-                    meteors[key].reset = 1;
-                    meteors[key].timetokill = getRandomInt(20, 30); ///getRandomInt(10,11)
-                    console.log(key, "ini  ", meteors[key].initX, " ", meteors[key].initZ);
-                    console.log(
-                        key +
-                            "  x " +
-                            (meteors[key].x - camera.position.x) +
-                            " z " +
-                            (meteors[key].z - camera.position.z) +
-                            "COND 1 X " +
-                            (meteors[key].x - camera.position.x < 10 && meteors[key].x - camera.position.x > -10) +
-                            "COND Z : " +
-                            (meteors[key].z - camera.position.z > -10 && meteors[key].z - camera.position.z < 10)
-                    );
-                }
-            } else {
-                meteors[key].x += meteors[key].initX + getRandomInt(-12, 12) * 0.1;
-
-                meteors[key].y += meteors[key].initY + getRandomInt(-12, 12) * 0.1;
-                meteors[key].z += meteors[key].initZ + getRandomInt(-12, 12) * 0.1;
-
-                meteors[key].model.position.set(meteors[key].x, meteors[key].y, meteors[key].z);
-
-                meteors[key].light.position.set(meteors[key].x + 25, meteors[key].y + 25, meteors[key].z + 25);
-
-                scene.add(meteors[key].light);
-
-                console.log(player.inTime, " ", player.hp);
-
-                if (
-                    meteors[key].x - camera.position.x < 10 &&
-                    meteors[key].x - camera.position.x > -10 &&
-                    meteors[key].y - camera.position.y < 10 &&
-                    meteors[key].y - camera.position.y > -10 &&
-                    meteors[key].z - camera.position.z > -10 &&
-                    meteors[key].z - camera.position.z < 10
-                ) {
-                    console.log("Player get hit by meteor " + key + " !");
-                    meteors[key].reset = 0;
-                    meteors[key].timetokill = 0;
-                    if (player.inTime <= 0) {
-                        player.inTime = 3;
-                        player.hp -= 1;
-                    }
-
-                    if (player.hp <= 0) {
-                        console.log("GAME OVER!");
-                        player.speed = 0;
-                    }
-                    //TODO: HIT EFFECT
-                }
-            }
-        })(_key);
-    }
-
-    // Meteor code ends
-
-    for (var _key in items) {
-        (function (key) {
-            camera.updateMatrixWorld();
-            items[key].model.rotation.z -= items[key].rotation * items[key].timetokill * 0.06;
-            if (items[key].timetokill > 0) items[key].timetokill -= 0.05;
-            if (items[key].timetokill <= 0) {
-                items[key].reset -= 0.1;
-                if (items[key].reset < 0) {
-                    items[key].timetokill = getRandomInt(15, 30);
-                    items[key].initX = camera.position.x + +getRandomInt(20, 100) * (getRandomInt(1, 2) == 2 ? 1 : -1);
-                    items[key].initZ = camera.position.z + getRandomInt(20, 100) * (getRandomInt(1, 2) == 2 ? 1 : -1);
-                    items[key].reset = 5;
-                }
-            }
-
-            items[key].x = items[key].initX;
-            items[key].y = camera.position.y;
-            items[key].z = items[key].initZ;
-            items[key].model.position.set(items[key].x, items[key].y, items[key].z);
-
-            if (items[key].x - camera.position.x < 5 && items[key].x - camera.position.x > -5 && items[key].z - camera.position.z > -5 && items[key].z - camera.position.z < 5) {
-                console.log("Player get item " + key + " !");
-                items[key].timetokill = 0;
-                items[key].reset = 0;
-                if (key == "oil1") {
-                    console.log("item1 obtained! hp +1 ");
-                    player.inTime = 3;
-                    player.speed = player.speed * 2;
-                    player.hp += 1;
-                }
-
-                //TODO: HIT EFFECT
-            }
-        })(_key);
-    }
+    for (const meteor of meteors) meteor.move(camera, scene, player);
+    for (const item of items) item.move(camera, player);
 
     // item code ends here
 
@@ -271,7 +156,15 @@ function render() {
 
         bullets[index].position.add(bullets[index].velocity);
     }
+    keyboardAction();
+    if (player.canShoot > 0) player.canShoot -= 1;
 
+    // position the gun in front of the camera
+
+    renderer.render(scene, camera);
+}
+
+function keyboardAction() {
     if (keyboard[87]) {
         // W key
         camera.position.x -= Math.sin(camera.rotation.y) * 2 * player.speed;
@@ -331,21 +224,8 @@ function render() {
         scene.add(bullet);
         player.canShoot = 10;
     }
-    if (player.canShoot > 0) player.canShoot -= 1;
-
-    // position the gun in front of the camera
-
-    renderer.render(scene, camera);
 }
-
-function keyDown(event) {
-    keyboard[event.keyCode] = true;
-}
-
-function keyUp(event) {
-    keyboard[event.keyCode] = false;
-}
-window.addEventListener("keydown", keyDown);
-window.addEventListener("keyup", keyUp);
+window.addEventListener("keydown", (event) => (keyboard[event.keyCode] = true));
+window.addEventListener("keyup", (event) => (keyboard[event.keyCode] = false));
 
 window.onload = init;
