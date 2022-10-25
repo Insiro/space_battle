@@ -17,23 +17,4 @@ export class Object {
         return diffx < 10 && diffy < 10 && diffz < 10;
     }
 }
-/**
- * @param {[Object]} objs
- * @param {THREE.GLTFLoader} loader
- * @param {THREE.Scene} scene
- */
-export async function loadObjects(objs, loader, scene) {
-    for (const obj of objs) {
-        await loader.load(
-            obj.gltf_path,
-            function (gltf) {
-                let model = gltf.scene.children[0];
-                if (model.light !== null) scene.add(model.light);
-                obj.setModel(model);
-                scene.add(gltf.scene);
-            },
-            undefined,
-            (error) => console.error(error)
-        );
-    }
-}
+

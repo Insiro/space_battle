@@ -1,6 +1,7 @@
 import { Object } from "../object.js";
 export class Item extends Object {
-    move(camera, player) {
+    move(player) {
+        const camera = player.camera;
         camera.updateMatrixWorld();
         this.model.rotation.z -= this.rotation * this.timetokill * 0.06;
         if (this.timetokill > 0) this.timetokill -= 0.05;

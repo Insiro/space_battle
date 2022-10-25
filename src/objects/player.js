@@ -1,21 +1,30 @@
 import { Object } from "./object.js";
 
 export class Player extends Object {
-    height = 1.8;
-    speed = 0.2;
-    turnSpeed = Math.PI * 0.02;
-    canShoot = 0;
-    hp = 3;
-    Score = 0;
-    inTime = 0;
-    camera = null;
+    constructor() {
+        super();
+        this.camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
+        this.reset();
+    }
+    reset() {
+        this.height = 1.8;
+        this.speed = 0.2;
+        this.turnSpeed = Math.PI * 0.02;
+        this.canShoot = 0;
+        this.hp = 3;
+        this.Score = 0;
+        this.inTime = 0;
+        this.camera.position.set(0, this.height, -5);
+        this.camera.lookAt(new THREE.Vector3(0, this.height, 0));
+    }
+
     /**
      * @param {int} x
      * @param {int} y
      * @param {*} gltf
      * @param { function(object) } collision_callback
      */
-    move() {
+    update() {
         if (this.inTime > 0) {
             this.inTime -= 0.05;
         } else {
@@ -28,8 +37,8 @@ export class Player extends Object {
         this.camera.position.z -= -Math.cos(this.camera.rotation.y) * this.speed;
     }
     key_s() {
-        this.camera.position.x -= Math.sin(this.camera.rotation.y) * 0.5 * this.speed;
-        this.camera.position.z -= -Math.cos(this.camera.rotation.y) * this.speed;
+        this.camera.position.x += Math.sin(this.camera.rotation.y) * 0.5 * this.speed;
+        this.camera.position.z += -Math.cos(this.camera.rotation.y) * this.speed;
     }
     key_a() {
         this.camera.position.x -= Math.sin(this.camera.rotation.y) * 2 * this.speed;
@@ -46,7 +55,7 @@ export class Player extends Object {
      * @param {boolean} left
      */
     key_lr(left) {
-        rotate = left ? -this.turnSpeed : this.turnSpeed;
+        const rotate = left ? -this.turnSpeed : this.turnSpeed;
         this.camera.rotation.y -= rotate;
     }
 }

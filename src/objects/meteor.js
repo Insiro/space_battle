@@ -17,11 +17,11 @@ export class Meteor extends Object {
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     /**
      *
-     * @param {*} camera
      * @param {THREE.Scene} scene
      * @param {*} player
      */
-    move(camera, scene, player) {
+    move(scene, player) {
+        const camera = player.camera;
         camera.updateMatrixWorld();
         this.model.rotation.z -= this.rotation * 0.05;
         if (this.timetokill > 0) this.timetokill -= 0.05;
@@ -61,7 +61,7 @@ export class Meteor extends Object {
 
             console.log(player.inTime, " ", player.hp);
             if (this.collisionCheck(camera)) {
-                console.log("Player get hit by meteor " + key + " !");
+                console.log("Player get hit by meteor  !");
                 this.reset = 0;
                 this.timetokill = 0;
                 if (player.inTime <= 0) {
