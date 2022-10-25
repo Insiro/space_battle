@@ -1,5 +1,6 @@
-class Oil {
-    gltf_path = "models/oil/scene.gltf";
+import { Object } from "./object.js";
+export class Oil extends Object {
+    gltf_path = "./models/oil/scene.gltf";
     initX = 100;
     initY = 0;
     initZ = 100;
@@ -12,17 +13,5 @@ class Oil {
     reset = 10;
     timetokill = 0;
     model = null;
-    constructor(loader, scene) {
-        loader.load(
-            this.gltf_path,
-            function (gltf) {
-                this.model = gltf.scene.children[0];
-                this.model.scale.set(1, 1, 1);
-                this.model.position.set(this.x, this.y, this.z);
-                scene.add(gltf.scene);
-            },
-            undefined,
-            (error) => console.error(error)
-        );
-    }
+    scale = [1, 1, 1];
 }

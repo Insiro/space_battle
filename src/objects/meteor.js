@@ -5,6 +5,7 @@ export class Meteor extends Object {
     initX = 100;
     initY = 0;
     initZ = 100;
+    scale = [2, 1, 1];
     x = 50;
     y = 50;
     z = 50;

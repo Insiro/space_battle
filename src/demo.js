@@ -1,8 +1,10 @@
 import { loadObjects } from "./objects/object.js";
 import { Meteor } from "./objects/meteor.js";
+import { Oil } from "./objects/oil.js";
+import { Moon } from "./objects/moon.js";
 var scene, camera, renderer, mesh;
 var meshFloor, ambientLight, light;
-
+let clock, crateBumpMap, crateNormalMap, crateTexture;
 var keyboard = {};
 var player = { height: 1.8, speed: 0.2, turnSpeed: Math.PI * 0.02, canShoot: 0, hp: 3, Score: 0, inTime: 0 };
 var USE_WIREFRAME = false;
@@ -16,77 +18,13 @@ var loadingManager = null;
 var RESOURCES_LOADED = false;
 
 /**@type {THREE.GLTFLoader} */
-let loader = new THREE.GLTFLoader();
 
 // Models index
 
-var models = {
-    oil: {
-        linktomodel: "models/oil/scene.gltf",
-        mesh: null,
-    },
-    meteor: {
-        linktomodel: "models/oil/scene.gltf",
-        mesh: null,
-    },
-    dog: null,
-    cat: null,
-};
-
-var planets = {
-    moon: {
-        x: 20,
-        y: 20,
-        z: 20,
-        model: null,
-    },
-};
-var items = {
-    oil1: {
-        initX: 100,
-        initY: 0,
-        initZ: 100,
-        x: 50,
-        y: 50,
-        z: 50,
-        inittime: 5,
-        timeleft: 5,
-        rotation: 0.1,
-        reset: 10,
-        timetokill: 0,
-        model: null,
-    },
-};
+var planets = [new Moon()];
+var items = [new Oil()];
 
 var meteors = [new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
-
-loader.load(
-    "./models/oil/scene.gltf",
-    function (gltf) {
-        items.oil1.model = gltf.scene.children[0];
-        items.oil1.model.scale.set(1, 1, 1);
-        items.oil1.model.position.set(planets.moon.x, planets.moon.y, planets.moon.z);
-        scene.add(gltf.scene);
-    },
-    undefined,
-    function (error) {
-        console.error(error);
-    }
-);
-
-loader.load(
-    "./models/moon/scene.gltf",
-    function (gltf) {
-        planets.moon.model = gltf.scene.children[0];
-        planets.moon.model.scale.set(2, 2, 2);
-        planets.moon.model.position.set(planets.moon.x, planets.moon.y, planets.moon.z);
-        scene.add(gltf.scene);
-    },
-    undefined,
-    function (error) {
-        console.error(error);
-    }
-);
 
 // Meshes index
 var meshes = {};
@@ -98,6 +36,8 @@ async function init() {
     let gltfloader = new THREE.GLTFLoader();
     scene = new THREE.Scene();
     await loadObjects(meteors, gltfloader, scene);
+    await loadObjects(items, gltfloader, scene);
+    await loadObjects(planets, gltfloader, scene);
     camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
     clock = new THREE.Clock();
 
@@ -151,10 +91,6 @@ async function init() {
     // don't, then the index '_key' can change while the model is being
     // downloaded, and so the wrong model will be matched with the wrong
     // index key.
-
-    var temp = 0;
-    for (var _key in models) {
-    }
 
     camera.position.set(0, player.height, -5);
     camera.lookAt(new THREE.Vector3(0, player.height, 0));
@@ -320,7 +256,7 @@ function render() {
     }
     var temp = 0.00005;
     temp *= 0.001;
-    planets.moon.model.rotation.x += 0.01;
+    planets[0].model.rotation.x += 0.01;
     // Uncomment for absurdity!
     // meshes["pirateship"].rotation.z += 0.01;
 

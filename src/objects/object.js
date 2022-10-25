@@ -1,7 +1,7 @@
 export class Object {
     setModel(model) {
-        model.scale.set(2, 2, 1);
-        model.position.set(50, 0, 5);
+        model.scale.set(this.scale[0], this.scale[1], this.scale[2]);
+        model.position.set(this.x, this.y, this.z);
         this.model = model;
     }
 }
@@ -20,9 +20,7 @@ export async function loadObjects(objs, loader, scene) {
                 scene.add(gltf.scene);
             },
             undefined,
-            function (error) {
-                console.error(error);
-            }
+            (error) => console.error(error)
         );
     }
 }
