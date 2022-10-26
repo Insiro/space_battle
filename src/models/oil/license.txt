@@ -1,0 +1,11 @@
+Model Information:
+* title:	Old oil Tank
+* source:	https://sketchfab.com/3d-models/old-oil-tank-c8f84cdf807745e492628beaa4e9e7f3
+* author:	MR.Sirapop (https://sketchfab.com/Sirapop.Satemrn)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Old oil Tank" (https://sketchfab.com/3d-models/old-oil-tank-c8f84cdf807745e492628beaa4e9e7f3) by MR.Sirapop (https://sketchfab.com/Sirapop.Satemrn) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

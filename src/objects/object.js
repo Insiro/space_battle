@@ -1,26 +1,20 @@
 export class Object {
-    /**
-     * @param {int} x
-     * @param {int} y
-     * @param {*} gltf
-     * @param { function(object) } collision_callback
-     */
-    constructor(x, y, gltf, collision_callback) {
-        this.x = x;
-        this.y = y;
-        this.gltf = gltf;
-        this.collision_callback = collision_callback;
+    light = null;
+    setModel(model) {
+        model.scale.set(this.scale[0], this.scale[1], this.scale[2]);
+        model.position.set(this.x, this.y, this.z);
+        this.model = model;
     }
-    /**
-    /** object moving logic */
-    move() {}
-    /**
-     * @param {Object} object
-     * @returns {boolean}
-     */
-    checkCollision(object) {
-        this.collision_callback();
-        //TODO: collision check
-        return true;
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+    collisionCheck(camera) {
+        let diffx = Math.abs(this.x - camera.position.x);
+        let diffy = Math.abs(this.y - camera.position.y);
+        let diffz = Math.abs(this.z - camera.position.z);
+        return diffx < 10 && diffy < 10 && diffz < 10;
     }
 }
+
