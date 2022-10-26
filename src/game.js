@@ -2,6 +2,7 @@ import { Meteor } from "./objects/meteor.js";
 import { Oil } from "./objects/item/oil.js";
 import { Moon } from "./objects/moon.js";
 import { Player } from "./objects/player.js";
+import { Bullet } from "./objects/bullet.js";
 export class Game {
     loaded = Math.max;
     RESOURCES_LOADED = false;
@@ -9,6 +10,7 @@ export class Game {
     gltfloader = new THREE.GLTFLoader();
     /**@type {THREE.Scene} */
     scene = new THREE.Scene();
+    /**@type {Bullet[]} */
     bullets = [];
     player = new Player();
     keyboard = {};
@@ -22,12 +24,14 @@ export class Game {
         for (const meteor of this.meteors) this.scene.remove(meteor);
         for (const item of this.items) this.scene.remove(item);
         for (const planet of this.planets) this.scene.remove(planet);
+        for (const bullet of this.bullets) this.scene.remove(bullet);
     }
     async reset() {
         this.remove_objects();
         this.meteors = [new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
         this.items = [new Oil()];
         this.planets = [new Moon()];
+        this.bullets = [];
         this.loaded = 0;
         await this.loadObjects(this.meteors, this.gltfloader);
         await this.loadObjects(this.items, this.gltfloader);

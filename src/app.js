@@ -1,4 +1,5 @@
 import { Game } from "./game.js";
+import { Bullet } from "./objects/bullet.js";
 var renderer;
 var USE_WIREFRAME = false;
 
@@ -71,6 +72,7 @@ function init() {
 // Runs when all resources are loaded
 
 function render() {
+    /**@type {Game} */
     const game = window.game;
     // Play the loading screen until resources are loaded.
     if (!game.RESOURCES_LOADED) {
@@ -93,19 +95,17 @@ function render() {
 
     // go through bullets array and update position
     // remove bullets when appropriate
-    const bullets = game.bullets;
-    for (var index = 0; index < bullets.length; index += 1) {
-        if (bullets[index] === undefined) continue;
-        if (bullets[index].alive == false) {
-            bullets.splice(index, 1);
-            continue;
+    game.bullets = game.bullets.filter((bullet) => {
+        if (bullet.alive_time > 0) {
+            bullet.move();
+            return true;
         }
+        game.scene.remove(bullet);
+        return false;
+    });
 
-        bullets[index].position.add(bullets[index].velocity);
-    }
-
-    keyboardAction();
     if (player.canShoot > 0) player.canShoot -= 1;
+    keyboardAction();
 
     // position the gun in front of the camera
     renderer.render(game.scene, game.player.camera);
@@ -126,30 +126,9 @@ function keyboardAction() {
     if (keyboard[32] && player.canShoot <= 0) {
         // spacebar key
         // creates a bullet as a Mesh object
-        var bullet = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-        // this is silly.
-        // var bullet = models.pirateship.mesh.clone();
-
-        // position the bullet to come from the player's weapon
-        let camera = window.game.camera;
-        bullet.position.set(camera.position.x, camera.position.y + 0.15, camera.position.z);
-
-        // set the velocity of the bullet
-        bullet.velocity = new THREE.Vector3(-Math.sin(camera.rotation.y), 0, Math.cos(camera.rotation.y));
-
-        // after 1000ms, set alive to false and remove from scene
-        // setting alive to false flags our update code to remove
-        // the bullet from the bullets array
-        bullet.alive = true;
-        let scene = window.game.scene;
-        setTimeout(function () {
-            bullet.alive = false;
-            scene.remove(bullet);
-        }, 1000);
-
-        // add to scene, array, and set the delay to 10 frames
+        let bullet = new Bullet(player);
         window.game.bullets.push(bullet);
-        scene.add(bullet);
+        window.game.scene.add(bullet.model);
         player.canShoot = 10;
     }
 }
