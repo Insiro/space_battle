@@ -87,8 +87,8 @@ function render() {
     player.update();
 
     for (const meteor of game.meteors) meteor.move(game.scene, game.player);
-    for (const item of game.items) item.move(game.player);
-    for (const planet of game.planets) planet.move();
+    for (const item of game.items) item.move(game.scene, game.player);
+    for (const planet of game.planets) planet.move(game.scene, game.player);
     // Uncomment for absurdity!
 
     // go through bullets array and update position

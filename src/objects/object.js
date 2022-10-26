@@ -16,5 +16,9 @@ export class Object {
         let diffz = Math.abs(this.z - camera.position.z);
         return diffx < 10 && diffy < 10 && diffz < 10;
     }
-}
+    respawn(camera)
+    {
 
+      
+    }
+}

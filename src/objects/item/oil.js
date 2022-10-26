@@ -13,5 +13,14 @@ export class Oil extends Item {
     reset = 10;
     timetokill = 0;
     model = null;
+    itemcode = 1;
     scale = [1, 1, 1];
+
+
+
+    /**
+     *
+     * @param {THREE.Scene} scene
+     * @param {*} player
+     */
 }
