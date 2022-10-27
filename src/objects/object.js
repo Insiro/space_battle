@@ -10,15 +10,11 @@ export class Object {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min;
     }
-    collisionCheck(camera) {
-        let diffx = Math.abs(this.x - camera.position.x);
-        let diffy = Math.abs(this.y - camera.position.y);
-        let diffz = Math.abs(this.z - camera.position.z);
+    collisionCheck(object) {
+        let diffx = Math.abs(this.x - object.x);
+        let diffy = Math.abs(this.y - object.y);
+        let diffz = Math.abs(this.z - object.z);
         return diffx < 10 && diffy < 10 && diffz < 10;
     }
-    respawn(camera)
-    {
-
-      
-    }
+    respawn(player) {}
 }
