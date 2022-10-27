@@ -77,10 +77,10 @@ export class Meteor extends Object {
         this.disX = player.x;
         this.disY = player.y;
         this.disZ = player.z;
-        this.x = this.initX;
-        this.y = this.initY;
-        this.z = this.initZ;
-
+        this.x = this.initX + this.disX;
+        this.y = this.initY + this.disY;
+        this.z = this.initZ + this.disZ;
+        this.hp = 3;
         this.reset = 1;
         this.timetokill = this.getRandomInt(10, 25) * 0.1;
     }
