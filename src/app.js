@@ -93,8 +93,9 @@ function render() {
         if (meteor.hp === 0);
         //TODO: update score, respawn
     }
-    for (const item of game.items) item.move(game.player);
-    for (const planet of game.planets) planet.move();
+    for (const item of game.items) item.move(game.scene, game.player);
+    for (const planet of game.planets) planet.move(game.scene, game.player);
+
     // Uncomment for absurdity!
 
     // go through bullets array and update position
