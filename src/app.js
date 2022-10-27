@@ -1,5 +1,5 @@
 import { Game } from "./game.js";
-var renderer;
+import { Bullet } from "./objects/bullet.js";
 var USE_WIREFRAME = false;
 
 var loadingScreen = {
@@ -7,13 +7,21 @@ var loadingScreen = {
     camera: new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 100),
     box: new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), new THREE.MeshBasicMaterial({ color: 0x4444ff })),
 };
-
+let dialog;
 // Bullets array
 
 function init() {
-    window.game = new Game();
+    dialog = document.getElementById("dialog");
+    dialog.childNodes[8].onclick = () => saveScores();
+    dialog.childNodes[11].onclick = () => {
+        dialog.removeAttribute("open");
+        window.game.reset();
+        render();
+    };
+    let infoBoard = document.getElementById("infoBoard");
+    window.game = new Game(infoBoard);
     const game = window.game;
-
+    game.loadAll();
     game.reset();
 
     const light3 = new THREE.PointLight(0xc4c4c4, 0.8);
@@ -25,8 +33,8 @@ function init() {
     loadingScreen.box.position.set(0, 0, 5);
     loadingScreen.camera.lookAt(loadingScreen.box.position);
     loadingScreen.scene.add(loadingScreen.box);
-
     //#endregion
+
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME }));
     mesh.position.y += 1;
     mesh.receiveShadow = true;
@@ -58,13 +66,14 @@ function init() {
     const bgTexture = loader.load("res/bg.webp");
     scene.background = bgTexture;
 
-    renderer = new THREE.WebGLRenderer();
+    window.renderer = new THREE.WebGLRenderer();
+    let renderer = window.renderer;
     renderer.setSize(1280, 720);
 
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.BasicShadowMap;
-
-    document.body.appendChild(renderer.domElement);
+    let container = document.getElementById("renderer_container");
+    container.appendChild(renderer.domElement);
 
     render();
 }
@@ -74,44 +83,65 @@ function render() {
     const game = window.game;
     // Play the loading screen until resources are loaded.
     if (!game.RESOURCES_LOADED) {
-        requestAnimationFrame(render);
         loadingScreen.box.position.x -= 0.05;
         if (loadingScreen.box.position.x < -10) loadingScreen.box.position.x = 10;
         loadingScreen.box.position.y = Math.sin(loadingScreen.box.position.x);
-        renderer.render(loadingScreen.scene, loadingScreen.camera);
         game.updateLoaded();
+        window.renderer.render(loadingScreen.scene, loadingScreen.camera);
+        requestAnimationFrame(render);
         return;
     }
 
     const player = game.player;
     player.update();
-
-    for (const meteor of game.meteors) meteor.move(game.scene, game.player);
+    //# region move objects
+    game.bullets = game.bullets.filter((bullet) => {
+        bullet.move(game.meteors);
+        if (bullet.alive_time > 0) {
+            return true;
+        }
+        game.scene.remove(bullet.model);
+        return false;
+    });
+    for (const meteor of game.meteors) {
+        meteor.move(game.scene, game.player);
+        if (meteor.hp === 0) {
+            meteor.respawn(player);
+            game.score++;
+        }
+    }
     for (const item of game.items) item.move(game.scene, game.player);
     for (const planet of game.planets) planet.move(game.scene, game.player);
-    // Uncomment for absurdity!
-
-    // go through bullets array and update position
-    // remove bullets when appropriate
-    const bullets = game.bullets;
-    for (var index = 0; index < bullets.length; index += 1) {
-        if (bullets[index] === undefined) continue;
-        if (bullets[index].alive == false) {
-            bullets.splice(index, 1);
-            continue;
-        }
-
-        bullets[index].position.add(bullets[index].velocity);
-    }
-
+    //#endregion
     keyboardAction();
-    if (player.canShoot > 0) player.canShoot -= 1;
 
     // position the gun in front of the camera
-    renderer.render(game.scene, game.player.camera);
+    window.renderer.render(game.scene, game.player.camera);
+
+    if (player.hp === 0) {
+        gameOver();
+        return;
+    }
+    game.updateInfoBoard();
     requestAnimationFrame(render);
 }
 
+function gameOver() {
+    dialog.childNodes[1].innerText = window.game.score;
+    dialog.childNodes[8].removeAttribute("disabled");
+    dialog.setAttribute("open", "");
+}
+function saveScores() {
+    dialog.childNodes[8].setAttribute("disabled", "");
+    let name = dialog.childNodes[5].value;
+    dialog.childNodes[5].value = "";
+    let scoreList = JSON.parse(localStorage.getItem("scores")) ?? [];
+
+    scoreList.push({ name: name, score: window.game.score });
+    scoreList.sort((a, b) => b.score - a.score);
+    scoreList.slice(0, 10);
+    localStorage.setItem("scores", JSON.stringify(scoreList));
+}
 function keyboardAction() {
     let player = window.game.player;
     let keyboard = window.game.keyboard;
@@ -126,30 +156,9 @@ function keyboardAction() {
     if (keyboard[32] && player.canShoot <= 0) {
         // spacebar key
         // creates a bullet as a Mesh object
-        var bullet = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-        // this is silly.
-        // var bullet = models.pirateship.mesh.clone();
-
-        // position the bullet to come from the player's weapon
-        let camera = window.game.camera;
-        bullet.position.set(camera.position.x, camera.position.y + 0.15, camera.position.z);
-
-        // set the velocity of the bullet
-        bullet.velocity = new THREE.Vector3(-Math.sin(camera.rotation.y), 0, Math.cos(camera.rotation.y));
-
-        // after 1000ms, set alive to false and remove from scene
-        // setting alive to false flags our update code to remove
-        // the bullet from the bullets array
-        bullet.alive = true;
-        let scene = window.game.scene;
-        setTimeout(function () {
-            bullet.alive = false;
-            scene.remove(bullet);
-        }, 1000);
-
-        // add to scene, array, and set the delay to 10 frames
+        let bullet = new Bullet(player);
         window.game.bullets.push(bullet);
-        scene.add(bullet);
+        window.game.scene.add(bullet.model);
         player.canShoot = 10;
     }
 }

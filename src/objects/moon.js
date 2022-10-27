@@ -10,18 +10,16 @@ export class Moon extends Object {
     model = null;
     scale = [2, 2, 2];
 
-
     /**
      *
      * @param {THREE.Scene} scene
      * @param {*} player
      */
     move(scene, player) {
-        const camera = player.camera;
-      // moon doesn't move.
+        // moon doesn't move.
         this.model.rotation.x += 0.01;
 
-        if (this.collisionCheck(camera)) {
+        if (this.collisionCheck(player)) {
             console.log("Player get hit by moon!");
             this.reset = 0;
             this.timetokill = 0;

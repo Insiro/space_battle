@@ -11,6 +11,32 @@
         <script type="module" src="./app.js"></script>
     </head>
     <body style="text-align: center">
-        <span style="position: absolute; top: 0px; left: 0px"> WASD to move.<br />Arrow keys to turn. </span>
+        <div id="dialogWrapper">
+            <div></div>
+            <dialog id="dialog">
+                score :&nbsp;<span></span> <br />
+                <input placeholder="user name" /><br />
+                <button>save score</button><br />
+                <button>restart game</button>
+            </dialog>
+            <div></div>
+        </div>
+        <span style="position: absolute; top: 0px; left: 0px">
+            WASD to move.<br />Arrow keys to turn. <br />
+            <span id="infoBoard"></span>
+        </span>
+        <div id="renderer_container"></div>
     </body>
+    <style>
+        #dialogWrapper {
+            position: absolute;
+            top: 5rem;
+            left: 0px;
+            display: flex;
+            right: 0px;
+        }
+        #dialogWrapper > div {
+            flex-grow: 1;
+        }
+    </style>
 </html>
