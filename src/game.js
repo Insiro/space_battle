@@ -18,6 +18,20 @@ export class Game {
     items = [];
     score = 0;
     planets = [];
+    constructor(infoBoard) {
+        let scoreDiv = document.createElement("div");
+        scoreDiv.innerHTML = "score : &nbsp;";
+        let hpDiv = document.createElement("div");
+        hpDiv.innerHTML = "HP : &nbsp;";
+        infoBoard.appendChild(scoreDiv);
+        infoBoard.appendChild(hpDiv);
+        this.scoreBoard = document.createElement("span");
+        this.hpBoard = document.createElement("span");
+
+        scoreDiv.appendChild(this.scoreBoard);
+        hpDiv.appendChild(this.hpBoard);
+        this.updateInfoBoard();
+    }
     updateLoaded() {
         this.RESOURCES_LOADED = this.loaded == this.meteors.length + this.items.length + this.planets.length;
     }
@@ -60,5 +74,9 @@ export class Game {
                 (error) => console.error(error)
             );
         }
+    }
+    updateInfoBoard() {
+        this.scoreBoard.innerText = this.score;
+        this.hpBoard.innerText = this.player.hp;
     }
 }

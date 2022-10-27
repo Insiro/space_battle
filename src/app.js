@@ -1,6 +1,5 @@
 import { Game } from "./game.js";
 import { Bullet } from "./objects/bullet.js";
-var renderer;
 var USE_WIREFRAME = false;
 
 var loadingScreen = {
@@ -12,7 +11,8 @@ var loadingScreen = {
 // Bullets array
 
 function init() {
-    window.game = new Game();
+    let infoBoard = document.getElementById("infoBoard");
+    window.game = new Game(infoBoard);
     const game = window.game;
 
     game.reset();
@@ -26,8 +26,8 @@ function init() {
     loadingScreen.box.position.set(0, 0, 5);
     loadingScreen.camera.lookAt(loadingScreen.box.position);
     loadingScreen.scene.add(loadingScreen.box);
-
     //#endregion
+
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME }));
     mesh.position.y += 1;
     mesh.receiveShadow = true;
@@ -59,35 +59,43 @@ function init() {
     const bgTexture = loader.load("res/bg.webp");
     scene.background = bgTexture;
 
-    renderer = new THREE.WebGLRenderer();
+    window.renderer = new THREE.WebGLRenderer();
+    let renderer = window.renderer;
     renderer.setSize(1280, 720);
 
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.BasicShadowMap;
-
-    document.body.appendChild(renderer.domElement);
+    let container = document.getElementById("renderer_container");
+    container.appendChild(renderer.domElement);
 
     render();
 }
 // Runs when all resources are loaded
 
 function render() {
-    /**@type {Game} */
     const game = window.game;
     // Play the loading screen until resources are loaded.
     if (!game.RESOURCES_LOADED) {
-        requestAnimationFrame(render);
         loadingScreen.box.position.x -= 0.05;
         if (loadingScreen.box.position.x < -10) loadingScreen.box.position.x = 10;
         loadingScreen.box.position.y = Math.sin(loadingScreen.box.position.x);
-        renderer.render(loadingScreen.scene, loadingScreen.camera);
         game.updateLoaded();
+        window.renderer.render(loadingScreen.scene, loadingScreen.camera);
+        requestAnimationFrame(render);
         return;
     }
 
     const player = game.player;
     player.update();
-
+    //# region move objects
+    game.bullets = game.bullets.filter((bullet) => {
+        bullet.move(game.meteors);
+        if (bullet.alive_time > 0) {
+            return true;
+        }
+        game.scene.remove(bullet.model);
+        return false;
+    });
     for (const meteor of game.meteors) {
         meteor.move(game.scene, game.player);
         if (meteor.hp === 0) {
@@ -97,26 +105,23 @@ function render() {
     }
     for (const item of game.items) item.move(game.scene, game.player);
     for (const planet of game.planets) planet.move(game.scene, game.player);
-
-    // Uncomment for absurdity!
-
-    // go through bullets array and update position
-    // remove bullets when appropriate
-    game.bullets = game.bullets.filter((bullet) => {
-        bullet.move(game.meteors);
-        if (bullet.alive_time > 0) {
-            return true;
-        }
-        game.scene.remove(bullet.model);
-        return false;
-    });
-
-    if (player.canShoot > 0) player.canShoot -= 1;
+    //#endregion
     keyboardAction();
 
     // position the gun in front of the camera
-    renderer.render(game.scene, game.player.camera);
+    window.renderer.render(game.scene, game.player.camera);
+
+    if (player.hp === 0) {
+        gameOver();
+        return;
+    }
+    game.updateInfoBoard();
     requestAnimationFrame(render);
+}
+
+function gameOver() {
+    alert("GAME OVER");
+    //TODO: show score info pages, store score
 }
 
 function keyboardAction() {
