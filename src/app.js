@@ -7,10 +7,17 @@ var loadingScreen = {
     camera: new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 100),
     box: new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), new THREE.MeshBasicMaterial({ color: 0x4444ff })),
 };
-
+let dialog;
 // Bullets array
 
 function init() {
+    dialog = document.getElementById("dialog");
+    dialog.childNodes[8].onclick = () => saveScores();
+    dialog.childNodes[11].onclick = () => {
+        dialog.removeAttribute("open");
+        window.game.reset();
+        render();
+    };
     let infoBoard = document.getElementById("infoBoard");
     window.game = new Game(infoBoard);
     const game = window.game;
@@ -120,10 +127,21 @@ function render() {
 }
 
 function gameOver() {
-    alert("GAME OVER");
-    //TODO: show score info pages, store score
+    dialog.childNodes[1].innerText = window.game.score;
+    dialog.childNodes[8].removeAttribute("disabled");
+    dialog.setAttribute("open", "");
 }
+function saveScores() {
+    dialog.childNodes[8].setAttribute("disabled", "");
+    let name = dialog.childNodes[5].value;
+    dialog.childNodes[5].value = "";
+    let scoreList = JSON.parse(localStorage.getItem("scores")) ?? [];
 
+    scoreList.push({ name: name, score: window.game.score });
+    scoreList.sort((a, b) => b.score - a.score);
+    scoreList.slice(0, 10);
+    localStorage.setItem("scores", JSON.stringify(scoreList));
+}
 function keyboardAction() {
     let player = window.game.player;
     let keyboard = window.game.keyboard;
