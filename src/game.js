@@ -1,6 +1,7 @@
-import { Meteor } from "./objects/meteor.js";
+import { Alien } from "./objects/enemy/alien.js";
+import { Meteor } from "./objects/enemy/meteor.js";
 import { Oil } from "./objects/item/oil.js";
-import { Moon } from "./objects/moon.js";
+import { Moon } from "./objects/planet/moon.js";
 import { Player } from "./objects/player.js";
 import { Bullet } from "./objects/bullet.js";
 export class Game {
@@ -12,7 +13,7 @@ export class Game {
     scene = new THREE.Scene();
     /**@type {Bullet[]} */
     bullets = [];
-    meteors = [new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
+    enemies = [new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(),new Meteor(),new Meteor(),new Meteor()];
     items = [new Oil()];
     planets = [new Moon()];
     player = new Player();
@@ -34,10 +35,10 @@ export class Game {
         this.updateInfoBoard();
     }
     updateLoaded() {
-        this.RESOURCES_LOADED = this.loaded == this.meteors.length + this.items.length + this.planets.length;
+        this.RESOURCES_LOADED = this.loaded == this.enemies.length + this.items.length + this.planets.length;
     }
     remove_objects() {
-        for (const meteor of this.meteors) this.scene.remove(meteor);
+        for (const Alien of this.enemies) this.scene.remove(Alien);
         for (const item of this.items) this.scene.remove(item);
         for (const planet of this.planets) this.scene.remove(planet);
         for (const bullet of this.bullets) this.scene.remove(bullet);
@@ -49,13 +50,13 @@ export class Game {
             bullet.alive_time = 0;
         }
         this.bullets = [];
-        for (const meteor of this.meteors) meteor.respawn(this.player);
+        for (const Alien of this.enemies) Alien.respawn(this.player);
         for (const item of this.items) item.respawn(this.player);
         this.score = 0;
         this.player.reset();
     }
     async loadAll() {
-        this.loadObjects(this.meteors, this.gltfloader);
+        this.loadObjects(this.enemies, this.gltfloader);
         this.loadObjects(this.items, this.gltfloader);
         this.loadObjects(this.planets, this.gltfloader);
     }

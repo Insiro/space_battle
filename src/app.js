@@ -96,17 +96,17 @@ function render() {
     player.update();
     //# region move objects
     game.bullets = game.bullets.filter((bullet) => {
-        bullet.move(game.meteors);
+        bullet.move(game.enemies);
         if (bullet.alive_time > 0) {
             return true;
         }
         game.scene.remove(bullet.model);
         return false;
     });
-    for (const meteor of game.meteors) {
-        meteor.move(game.scene, game.player);
-        if (meteor.hp === 0) {
-            meteor.respawn(player);
+    for (const enemy of game.enemies) {
+        enemy.move(game.scene, game.player);
+        if (enemy.hp <= 0) {
+            enemy.respawn(player);
             game.score++;
         }
     }
@@ -118,7 +118,7 @@ function render() {
     // position the gun in front of the camera
     window.renderer.render(game.scene, game.player.camera);
 
-    if (player.hp === 0) {
+    if (player.hp <= 0) {
         gameOver();
         return;
     }
