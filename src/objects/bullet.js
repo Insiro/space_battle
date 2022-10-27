@@ -18,11 +18,16 @@ export class Bullet extends Object {
         this.model.position.set(player.x, player.y, player.z);
         this.velocity = new THREE.Vector3(-Math.sin(player.camera.rotation.y), 0, Math.cos(player.camera.rotation.y));
     }
-    move() {
+    move(meteros) {
         this.model.position.add(this.velocity);
         this.x = this.model.position.x;
         this.y = this.model.position.y;
         this.z = this.model.position.z;
         this.alive_time--;
+        for (const meteor of meteros)
+            if (this.collisionCheck(meteor)) {
+                // meteor.respawn()
+                this.alive_time = 0;
+            }
     }
 }

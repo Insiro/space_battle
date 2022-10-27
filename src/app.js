@@ -88,7 +88,11 @@ function render() {
     const player = game.player;
     player.update();
 
-    for (const meteor of game.meteors) meteor.move(game.scene, game.player);
+    for (const meteor of game.meteors) {
+        meteor.move(game.scene, game.player);
+        if (meteor.hp === 0);
+        //TODO: update score, respawn
+    }
     for (const item of game.items) item.move(game.player);
     for (const planet of game.planets) planet.move();
     // Uncomment for absurdity!
@@ -96,8 +100,8 @@ function render() {
     // go through bullets array and update position
     // remove bullets when appropriate
     game.bullets = game.bullets.filter((bullet) => {
+        bullet.move(game.meteors);
         if (bullet.alive_time > 0) {
-            bullet.move();
             return true;
         }
         game.scene.remove(bullet);

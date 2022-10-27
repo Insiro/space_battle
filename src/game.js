@@ -16,6 +16,7 @@ export class Game {
     keyboard = {};
     meteors = [];
     items = [];
+    score = 0;
     planets = [];
     updateLoaded() {
         this.RESOURCES_LOADED = this.loaded == this.meteors.length + this.items.length + this.planets.length;
@@ -29,6 +30,7 @@ export class Game {
     async reset() {
         this.remove_objects();
         this.meteors = [new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
+        this.score = 0;
         this.items = [new Oil()];
         this.planets = [new Moon()];
         this.bullets = [];
