@@ -90,8 +90,10 @@ function render() {
 
     for (const meteor of game.meteors) {
         meteor.move(game.scene, game.player);
-        if (meteor.hp === 0);
-        //TODO: update score, respawn
+        if (meteor.hp === 0) {
+            meteor.respawn(player);
+            game.score++;
+        }
     }
     for (const item of game.items) item.move(game.scene, game.player);
     for (const planet of game.planets) planet.move(game.scene, game.player);
@@ -105,7 +107,7 @@ function render() {
         if (bullet.alive_time > 0) {
             return true;
         }
-        game.scene.remove(bullet);
+        game.scene.remove(bullet.model);
         return false;
     });
 

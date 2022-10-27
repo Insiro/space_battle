@@ -28,6 +28,8 @@ export class Bullet extends Object {
             if (this.collisionCheck(meteor)) {
                 // meteor.respawn()
                 this.alive_time = 0;
+                meteor.hp -= 1;
+                break;
             }
     }
 }
