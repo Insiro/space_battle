@@ -59,11 +59,6 @@ export class Meteor extends Object {
                 player.inTime = 3;
                 player.hp -= 1;
             }
-
-            if (player.hp <= 0) {
-                console.log("GAME OVER!");
-                player.speed = 0;
-            }
             //TODO: HIT EFFECT
         }
     }
