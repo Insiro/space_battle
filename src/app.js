@@ -14,7 +14,7 @@ function init() {
     let infoBoard = document.getElementById("infoBoard");
     window.game = new Game(infoBoard);
     const game = window.game;
-
+    game.loadAll();
     game.reset();
 
     const light3 = new THREE.PointLight(0xc4c4c4, 0.8);

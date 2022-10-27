@@ -12,12 +12,13 @@ export class Game {
     scene = new THREE.Scene();
     /**@type {Bullet[]} */
     bullets = [];
+    meteors = [new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
+    items = [new Oil()];
+    planets = [new Moon()];
     player = new Player();
     keyboard = {};
-    meteors = [];
-    items = [];
     score = 0;
-    planets = [];
+    loaded = 0;
     constructor(infoBoard) {
         let scoreDiv = document.createElement("div");
         scoreDiv.innerHTML = "score : &nbsp;";
@@ -43,21 +44,22 @@ export class Game {
     }
     async reset() {
         this.remove_objects();
-        this.meteors = [new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
-        this.score = 0;
-        this.items = [new Oil()];
-        this.planets = [new Moon()];
+        for (const bullet of this.bullets) {
+            this.scene.remove(bullet.model);
+            bullet.alive_time = 0;
+        }
         this.bullets = [];
-        this.loaded = 0;
-        await this.loadObjects(this.meteors, this.gltfloader);
-        await this.loadObjects(this.items, this.gltfloader);
-        await this.loadObjects(this.planets, this.gltfloader);
+        for (const meteor of this.meteors) meteor.respawn(this.player);
+        for (const item of this.items) item.respawn(this.player);
+        this.score = 0;
         this.player.reset();
     }
-    /**
-     * @param {[Object]} objs
-     * @param {THREE.GLTFLoader} loader
-     */
+    async loadAll() {
+        this.loadObjects(this.meteors, this.gltfloader);
+        this.loadObjects(this.items, this.gltfloader);
+        this.loadObjects(this.planets, this.gltfloader);
+    }
+
     async loadObjects(objs, loader) {
         let scene = this.scene;
         for (const obj of objs) {
@@ -65,10 +67,11 @@ export class Game {
                 obj.gltf_path,
                 function (gltf) {
                     let model = gltf.scene.children[0];
-                    if (model.light !== null) scene.add(model.light);
+                    if (model.light !== null || model.light !== undefined) scene.add(model.light);
                     obj.setModel(model);
                     scene.add(gltf.scene);
                     window.game.loaded += 1;
+                    window.game.updateLoaded();
                 },
                 undefined,
                 (error) => console.error(error)

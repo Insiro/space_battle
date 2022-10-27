@@ -22,7 +22,7 @@ export class Player extends Object {
         this.camera.lookAt(new THREE.Vector3(0, this.height, 0));
     }
     update() {
-        if (player.canShoot > 0) player.canShoot -= 1;
+        if (this.canShoot > 0) this.canShoot -= 1;
         if (this.inTime > 0) {
             this.inTime -= 0.05;
         } else {
