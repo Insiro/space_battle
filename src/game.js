@@ -4,6 +4,8 @@ import { Oil } from "./objects/item/oil.js";
 import { Moon } from "./objects/planet/moon.js";
 import { Player } from "./objects/player.js";
 import { Bullet } from "./objects/bullet.js";
+import { Spaceship } from "./objects/spaceship";
+
 export class Game {
     loaded = Math.max;
     RESOURCES_LOADED = false;
