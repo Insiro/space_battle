@@ -7,6 +7,7 @@ export class Bullet extends Object {
     model = null;
     scale = [2, 2, 2];
     alive_time = 100;
+    damage = 1;
     constructor(player) {
         super();
 
@@ -28,7 +29,7 @@ export class Bullet extends Object {
             if (this.collisionCheck(meteor)) {
                 // meteor.respawn()
                 this.alive_time = 0;
-                meteor.hp -= 1;
+                meteor.hp -= this.damage;
                 break;
             }
     }

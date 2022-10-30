@@ -22,7 +22,7 @@ export class Meteor extends Enemy {
         model = null;
         light = new THREE.PointLight(0xc4c4c4, 0.8);
         damage = 2;
-        timeset = 0.00165;
+        timeset = 0.00025;
 
 
             /**
