@@ -1,9 +1,13 @@
 import { Object } from "./object.js";
 
 export class Player extends Object {
-    constructor() {
+    gltf_path = "./models/player/space.glb";
+    scale = [0.8, 0.8, 0.8];
+    /**@param {PlayerTextureInfo|undefined} modelInfo */
+    constructor(modelInfo) {
         super();
         this.camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
+        this.modelInfo = modelInfo;
         this.reset();
     }
     reset() {
@@ -63,5 +67,24 @@ export class Player extends Object {
     key_lr(left) {
         const rotate = left ? -this.turnSpeed : this.turnSpeed;
         this.camera.rotation.y -= rotate;
+    }
+    async setModel(model) {
+        super.setModel(model);
+        let modelInfo = this.modelInfo;
+        console.log(modelInfo);
+        let mtlInfo = { shininess: modelInfo.shininess ? modelInfo.shininess : 10 };
+        if (modelInfo.texture) {
+            /**@type {THREE.TextureLoader} */
+            const loader = new THREE.TextureLoader();
+            let txt = await loader.load(modelInfo.texture);
+            txt.repeat.set(modelInfo.size[0], modelInfo.size[1], modelInfo.size[2]);
+            txt.wrapS = THREE.RepeatWrapping;
+            txt.wrapT = THREE.RepeatWrapping;
+            mtlInfo["map"] = txt;
+        } else mtlInfo["color"] = parseInt("0x" + modelInfo.color);
+
+        this.model.traverse((o) => {
+            if (o.isMesh && o.nameID != null) if (o.nameID == type) o.material = new THREE.MeshPhongMaterial(mtlInfo);
+        });
     }
 }

@@ -4,6 +4,18 @@ import { Oil } from "./objects/item/oil.js";
 import { Moon } from "./objects/planet/moon.js";
 import { Player } from "./objects/player.js";
 import { Bullet } from "./objects/bullet.js";
+
+class PlayerTextureInfo {
+    /**@type {number | undefined}*/
+    shininess = undefined;
+    /**@type {number[] | undefined} */
+    size = undefined;
+    /**@type {URL| undefined} texture Url */
+    texture = undefined;
+    /** @type {string|undefined } RGB code */
+    color = undefined;
+}
+
 export class Game {
     loaded = Math.max;
     RESOURCES_LOADED = false;
@@ -13,14 +25,16 @@ export class Game {
     scene = new THREE.Scene();
     /**@type {Bullet[]} */
     bullets = [];
-    enemies = [new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(),new Meteor(),new Meteor(),new Meteor()];
+    enemies = [new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
     items = [new Oil()];
     planets = [new Moon()];
-    player = new Player();
+    player;
     keyboard = {};
     score = 0;
     loaded = 0;
-    constructor(infoBoard) {
+    /**@param {PlayerTextureInfo|undefined} modelInfo */
+    constructor(infoBoard, modelInfo) {
+        this.player = new Player(modelInfo);
         let scoreDiv = document.createElement("div");
         scoreDiv.innerHTML = "score : &nbsp;";
         let hpDiv = document.createElement("div");
@@ -38,6 +52,7 @@ export class Game {
         this.RESOURCES_LOADED = this.loaded == this.enemies.length + this.items.length + this.planets.length;
     }
     remove_objects() {
+        this.loaded = -1;
         for (const Alien of this.enemies) this.scene.remove(Alien);
         for (const item of this.items) this.scene.remove(item);
         for (const planet of this.planets) this.scene.remove(planet);
@@ -56,6 +71,7 @@ export class Game {
         this.player.reset();
     }
     async loadAll() {
+        this.loadObjects([this.player], this.gltfloader);
         this.loadObjects(this.enemies, this.gltfloader);
         this.loadObjects(this.items, this.gltfloader);
         this.loadObjects(this.planets, this.gltfloader);
@@ -66,10 +82,10 @@ export class Game {
         for (const obj of objs) {
             await loader.load(
                 obj.gltf_path,
-                function (gltf) {
+                async function (gltf) {
                     let model = gltf.scene.children[0];
-                    if (model.light !== null || model.light !== undefined) scene.add(model.light);
-                    obj.setModel(model);
+                    if (model instanceof THREE.Object3D) scene.add(model.light);
+                    await obj.setModel(model);
                     scene.add(gltf.scene);
                     window.game.loaded += 1;
                     window.game.updateLoaded();

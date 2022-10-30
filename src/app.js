@@ -11,6 +11,8 @@ let dialog;
 // Bullets array
 
 function init() {
+    let urlQuery = new URLSearchParams(window.location.search);
+    let modelInfo = JSON.parse(urlQuery.get("q"));
     dialog = document.getElementById("dialog");
     dialog.childNodes[8].onclick = () => saveScores();
     dialog.childNodes[11].onclick = () => {
@@ -19,7 +21,7 @@ function init() {
         render();
     };
     let infoBoard = document.getElementById("infoBoard");
-    window.game = new Game(infoBoard);
+    window.game = new Game(infoBoard, modelInfo);
     const game = window.game;
     game.loadAll();
     game.reset();

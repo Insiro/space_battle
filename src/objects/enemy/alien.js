@@ -1,5 +1,5 @@
 import { Enemy } from "./enemy.js";
-export class Alien extends Enemy  {
+export class Alien extends Enemy {
     gltf_path = "./models/alien/scene.gltf";
     mesh = null;
     initX = 1000;
@@ -24,10 +24,9 @@ export class Alien extends Enemy  {
     damage = 1;
     timeset = 0.00165;
 
-
-        /**
-         *
-         * @param {THREE.Scene} scene
-         * @param {*} player
-         */
+    /**
+     *
+     * @param {THREE.Scene} scene
+     * @param {*} player
+     */
 }
