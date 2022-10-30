@@ -2,7 +2,7 @@ import { Object } from "./object.js";
 
 export class Player extends Object {
     gltf_path = "./models/player/space.glb";
-    scale = [0.8, 0.8, 0.8];
+    scale = [0.3, 0.3, 0.3];
     /**@param {PlayerTextureInfo|undefined} modelInfo */
     constructor(modelInfo) {
         super();
@@ -74,7 +74,6 @@ export class Player extends Object {
         console.log(modelInfo);
         let mtlInfo = { shininess: modelInfo.shininess ? modelInfo.shininess : 10 };
         if (modelInfo.texture) {
-            /**@type {THREE.TextureLoader} */
             const loader = new THREE.TextureLoader();
             let txt = await loader.load(modelInfo.texture);
             txt.repeat.set(modelInfo.size[0], modelInfo.size[1], modelInfo.size[2]);
@@ -84,7 +83,7 @@ export class Player extends Object {
         } else mtlInfo["color"] = parseInt("0x" + modelInfo.color);
 
         this.model.traverse((o) => {
-            if (o.isMesh && o.nameID != null) if (o.nameID == type) o.material = new THREE.MeshPhongMaterial(mtlInfo);
+            if (o.isMesh && o.nameID != null) if (o.nameID == "Maquis_Raider") o.material = new THREE.MeshPhongMaterial(mtlInfo);
         });
     }
 }
