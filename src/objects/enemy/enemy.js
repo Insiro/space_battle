@@ -26,6 +26,7 @@ export class Enemy extends Object {
 
       if (this.collisionCheck(player)) {
           this.reset = 0;
+          this.timeset = 0.00005;
           this.respawn(player);
           if (player.inTime <= 0) {
               player.inTime = 3;
@@ -50,6 +51,7 @@ export class Enemy extends Object {
       this.z = this.initZ + this.disZ;
       this.hp = 3;
       this.reset = 1;
+      this.timeset +=0.0001;
       this.timetokill = this.getRandomInt(10, 25) * 0.1;
   }
 }

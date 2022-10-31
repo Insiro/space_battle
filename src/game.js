@@ -2,6 +2,9 @@ import { Alien } from "./objects/enemy/alien.js";
 import { Meteor } from "./objects/enemy/meteor.js";
 import { Oil } from "./objects/item/oil.js";
 import { Moon } from "./objects/planet/moon.js";
+import { Uranus } from "./objects/planet/uranus.js";
+import { Sun } from "./objects/planet/sun.js";
+import { Earth } from "./objects/planet/Earth.js";
 import { Player } from "./objects/player.js";
 import { Bullet } from "./objects/bullet.js";
 import { Spaceship } from "./objects/spaceship";
@@ -15,9 +18,9 @@ export class Game {
     scene = new THREE.Scene();
     /**@type {Bullet[]} */
     bullets = [];
-    enemies = [new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(),new Meteor(),new Meteor(),new Meteor()];
+    enemies = [new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(),new Meteor(),new Meteor(),new Meteor(), new Meteor(),new Meteor(),new Meteor(),new Meteor()];
     items = [new Oil()];
-    planets = [new Moon()];
+    planets = [new Moon() , new Uranus(), new Earth];
     player = new Player();
     keyboard = {};
     score = 0;
