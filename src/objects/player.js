@@ -64,4 +64,6 @@ export class Player extends Object {
         const rotate = left ? -this.turnSpeed : this.turnSpeed;
         this.camera.rotation.y -= rotate;
     }
+
+
 }

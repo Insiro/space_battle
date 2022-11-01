@@ -11,5 +11,18 @@ export class Spaceship extends Object {
     z = 20;
 
     model = null;
-    scale = [2, 2, 2];
+    scale = [0.02, 0.02, 0.02];
+
+    move(scene, player) {
+        camera = player.camera;
+
+        // position the gun in front of the camera
+        this.model.position.set(
+            camera.position.x - Math.sin(camera.rotation.y + Math.PI / 6) * 0.75,
+            camera.position.y - Math.sin(time * 4 + camera.position.x + camera.position.z) * 0.01,
+            camera.position.z + Math.cos(camera.rotation.y + Math.PI / 6) * 0.75
+        );
+
+        this.model.rotation.set(camera.rotation.x - 90, camera.rotation.y + 90, camera.rotation.z);
+    }
 }
