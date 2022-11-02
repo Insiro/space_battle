@@ -15,6 +15,8 @@ export class Player extends Object {
         this.Score = 0;
         this.inTime = 0;
 
+        this.bullettime = 0; //damage that player can shoot ;
+
         this.x = 0;
         this.y = this.height;
         this.z = -5;
@@ -23,9 +25,12 @@ export class Player extends Object {
     }
     update() {
         if (this.canShoot > 0) this.canShoot -= 1;
-        if (this.inTime > 0) {
-            this.inTime -= 0.05;
-        } else {
+        if( this.bullettime >0 ) this.bullettime -=0.025;
+        else {
+          this.bullettime =0;
+        }
+        if (this.inTime > 0) this.inTime -= 0.025;
+        else {
             this.speed = 0.2;
             this.inTime = 0;
         }

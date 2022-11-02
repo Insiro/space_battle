@@ -5,8 +5,12 @@ import { Moon } from "./objects/planet/moon.js";
 import { Uranus } from "./objects/planet/uranus.js";
 import { Sun } from "./objects/planet/sun.js";
 import { Earth } from "./objects/planet/Earth.js";
+import { Mars} from "./objects/planet/Mars.js";
 import { Player } from "./objects/player.js";
 import { Bullet } from "./objects/bullet.js";
+import {Granade} from  "./objects/item/granade.js";
+import {SuperBullet} from "./objects/superBullet.js";
+import {SpacePlanet} from "./objects/planet/spaceplanet.js"
 export class Game {
     loaded = Math.max;
     RESOURCES_LOADED = false;
@@ -16,9 +20,12 @@ export class Game {
     scene = new THREE.Scene();
     /**@type {Bullet[]} */
     bullets = [];
+    /**@type {SuperBullet[]} */
+    superbullets = [];
     enemies = [new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(),new Meteor(),new Meteor(),new Meteor(), new Meteor(),new Meteor(),new Meteor(),new Meteor()];
-    items = [new Oil()];
-    planets = [new Moon() , new Uranus(), new Earth];
+    items = [new Oil(), new Granade()];
+    planets = [new Moon() , new Uranus(), new Earth(),new Sun(),new Mars(),new SpacePlanet()];
+    backgrounds = [ ];
     player = new Player();
     keyboard = {};
     score = 0;
@@ -41,10 +48,12 @@ export class Game {
         this.RESOURCES_LOADED = this.loaded == this.enemies.length + this.items.length + this.planets.length;
     }
     remove_objects() {
-        for (const Alien of this.enemies) this.scene.remove(Alien);
+        for (const enemy of this.enemies) this.scene.remove(enemy);
         for (const item of this.items) this.scene.remove(item);
         for (const planet of this.planets) this.scene.remove(planet);
         for (const bullet of this.bullets) this.scene.remove(bullet);
+        for (const superbullet of this.superbullets) this.scene.remove(superbullet);
+        //for (const background of this.backgrounds) this.scene.remove(background);
     }
     async reset() {
         this.remove_objects();
@@ -53,7 +62,13 @@ export class Game {
             bullet.alive_time = 0;
         }
         this.bullets = [];
-        for (const Alien of this.enemies) Alien.respawn(this.player);
+
+        for (const superbullet of this.superbullets) {
+            this.scene.remove(superbullet.model);
+            superbullet.alive_time = 0;
+        }
+        this.superbullets = [];
+        for (const enemy of this.enemies) enemy.respawn(this.player);
         for (const item of this.items) item.respawn(this.player);
         this.score = 0;
         this.player.reset();
@@ -62,6 +77,7 @@ export class Game {
         this.loadObjects(this.enemies, this.gltfloader);
         this.loadObjects(this.items, this.gltfloader);
         this.loadObjects(this.planets, this.gltfloader);
+        //this.loadObjects(this.backgrounds, this.gltfloader);
     }
 
     async loadObjects(objs, loader) {

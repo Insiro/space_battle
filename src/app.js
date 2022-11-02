@@ -1,5 +1,6 @@
 import { Game } from "./game.js";
 import { Bullet } from "./objects/bullet.js";
+import {SuperBullet} from "./objects/superBullet.js";
 var USE_WIREFRAME = false;
 
 var loadingScreen = {
@@ -103,6 +104,15 @@ function render() {
         game.scene.remove(bullet.model);
         return false;
     });
+
+    game.superbullets = game.superbullets.filter((superbullet) => {
+        superbullet.move(game.enemies);
+        if (superbullet.alive_time > 0) {
+            return true;
+        }
+        game.scene.remove(superbullet.model);
+        return false;
+    });
     for (const enemy of game.enemies) {
         enemy.move(game.scene, game.player);
         if (enemy.hp <= 0) {
@@ -112,6 +122,7 @@ function render() {
     }
     for (const item of game.items) item.move(game.scene, game.player);
     for (const planet of game.planets) planet.move(game.scene, game.player);
+    //for (const background of game.backgrounds) planet.move(game.scene, game.player);
     //#endregion
     keyboardAction();
 
@@ -156,10 +167,22 @@ function keyboardAction() {
     if (keyboard[32] && player.canShoot <= 0) {
         // spacebar key
         // creates a bullet as a Mesh object
-        let bullet = new Bullet(player);
-        window.game.bullets.push(bullet);
-        window.game.scene.add(bullet.model);
-        player.canShoot = 10;
+        if(player.bullettime ==0)
+        {
+
+          let bullet = new Bullet(player);
+          window.game.bullets.push(bullet);
+          window.game.scene.add(bullet.model);
+          player.canShoot = 10;
+        }
+        else
+        {
+
+          let superbullet = new SuperBullet(player);
+          window.game.bullets.push(superbullet);
+          window.game.scene.add(superbullet.model);
+          player.canShoot = 10;
+        }
     }
 }
 window.addEventListener("keydown", (event) => (window.game.keyboard[event.keyCode] = true));

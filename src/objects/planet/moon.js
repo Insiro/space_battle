@@ -9,9 +9,9 @@ export class Moon extends Planet {
     gltf_path = "./models/moon/scene.gltf";
     mesh = null;
     initX = 100;
-    initY = 0;
+    initY = -50;
     initZ = 100;
-    scale = [4, 4, 4];
+    scale = [15, 15, 15];
     x = 50;
     y = 0;
     z = 50;
@@ -28,5 +28,6 @@ export class Moon extends Planet {
     model = null;
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     damage = 15;
+    background = 0;
 
 }

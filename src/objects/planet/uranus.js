@@ -11,9 +11,9 @@ export class Uranus extends Planet {
     initX = -100;
     initY = 0;
     initZ = -100;
-    scale = [4, 4, 4];
+    scale = [15, 15,15 ];
     x = 200;
-    y = 0;
+    y = 100;
     z = 50;
     disX = 0;
     disY = 0;
@@ -28,5 +28,6 @@ export class Uranus extends Planet {
     model = null;
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     damage = 15;
+    background = 0;
 
 }

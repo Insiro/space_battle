@@ -9,9 +9,9 @@ export class Earth extends Planet {
     gltf_path = "./models/earth/scene.gltf";
     mesh = null;
     initX = 300;
-    initY = 0;
+    initY = 100;
     initZ = -300;
-    scale = [0.05, 0.05, 0.05];
+    scale = [0.3, 0.3, 0.3];
     x = 150;
     y = 0;
     z = -150;
@@ -28,5 +28,6 @@ export class Earth extends Planet {
     model = null;
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     damage = 15;
+    background = 0;
 
 }

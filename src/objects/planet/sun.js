@@ -11,7 +11,7 @@ export class Sun extends Planet {
     initX = 300;
     initY = 0;
     initZ = 50;
-    scale = [1, 1, 1];
+    scale = [0.01, 0.01, 0.01];
     x = -50;
     y = 0;
     z = -50;
@@ -27,6 +27,7 @@ export class Sun extends Planet {
     timetokill = 0;
     model = null;
     light = new THREE.PointLight(0xc4c4c4, 0.8);
-    damage = 15;
+    damage = 0;
+    background =1;
 
 }
