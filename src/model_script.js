@@ -1,20 +1,21 @@
 /*REFERENCE: https://tympanus.net/codrops/2019/09/17/how-to-build-a-color-customizer-app-for-a-3d-model-with-three-js/ */
 const LOADER = document.getElementById('js-loader');
 const TRAY = document.getElementById('js-tray-slide');
-const MODEL_PATH = "space.glb";
+const MODEL_PATH = "models/space.glb";
 
 var theModel;
+var theMtl; 
 
-var activeOption = 'Maquis_Raider';
+var activeOption = 'Maquis_Raider'; //model's shape to mesh
 var loaded = false;
 var cameraFar = 5;
 
 const colors = [
-{ texture: 'img/wood_.jpg', size: [2, 2, 2], shininess: 60 },
-{ texture: 'img/fabric_.jpg', size: [4, 4, 4], shininess: 0 },
-{ texture: 'img/pattern_.jpg', size: [8, 8, 8], shininess: 10 },
-{ texture: 'img/denim_.jpg', size: [3, 3, 3], shininess: 0 },
-{ texture: 'img/quilt_.jpg', size: [6, 6, 6], shininess: 0 },
+{ texture: 'res/wood_.jpg', size: [2, 2, 2], shininess: 60 },
+{ texture: 'res/fabric_.jpg', size: [4, 4, 4], shininess: 0 },
+{ texture: 'res/pattern_.jpg', size: [8, 8, 8], shininess: 10 },
+{ texture: 'res/denim_.jpg', size: [3, 3, 3], shininess: 0 },
+{ texture: 'res/quilt_.jpg', size: [6, 6, 6], shininess: 0 },
 { color: '131417' },
 { color: '374047' },
 { color: '5f6e78' },
@@ -73,7 +74,7 @@ const colors = [
 const loader2 = new THREE.TextureLoader();
 const scene = new THREE.Scene();
 // Set background
-const BACKGROUND_WEBP = loader2.load("img/bg.webp");
+const BACKGROUND_WEBP = loader2.load("res/bg.webp");
 scene.background = BACKGROUND_WEBP;
 
 // Init the canvas
@@ -106,7 +107,6 @@ loader.load(MODEL_PATH, function (gltf) {
 
   // Add the model to the scene
   scene.add(theModel);
-
   /*// Remove the loader
   LOADER.remove();*/
 
@@ -146,7 +146,7 @@ scene.add(dirLight);
 
 
 // ======= CONTROL =======
-// Add controls
+// Add controls about model
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.maxPolarAngle = Math.PI / 2;
 controls.minPolarAngle = Math.PI / 3;
@@ -159,6 +159,7 @@ controls.autoRotateSpeed = 0.2; // 30
 animate();
 
 buildColors(colors);
+console.log(TRAY);
 
 
 // ======= SWATCH =======
@@ -166,6 +167,7 @@ buildColors(colors);
 const swatches = document.querySelectorAll(".tray__swatch");
 for (const swatch of swatches) {
   swatch.addEventListener('click', selectSwatch);
+  console.log(theMtl);
 }
 
 
@@ -175,6 +177,7 @@ var slider = document.getElementById('js-tray'),sliderItems = document.getElemen
 slide(slider, sliderItems);
 
 
+
 // ======= FUNCTION ======
 // Function - Add the textures to the models
 function initColor(parent, type, mtl) {
@@ -182,7 +185,9 @@ function initColor(parent, type, mtl) {
     if (o.isMesh) {
       if (o.name.includes(type)) {
         o.material = mtl;
+        theMtl = o.material;
         o.nameID = type; // Set a new property to identify this object
+        console.log(o.material);
       }
     }
   });
@@ -221,7 +226,7 @@ function animate() {
 
 }
 
-// Function - Build Colors
+// Function - Build Colors (Connect colors tray and real value)
 function buildColors(colors) {
   for (let [i, color] of colors.entries()) {
     let swatch = document.createElement('div');
@@ -242,8 +247,8 @@ function buildColors(colors) {
 
 // Function - selectSwatch
 function selectSwatch(e) {
-  let color = colors[parseInt(e.target.dataset.key)];
-  let new_mtl;
+  var color = colors[parseInt(e.target.dataset.key)];
+  var new_mtl;
 
   if (color.texture) {
 
@@ -256,18 +261,16 @@ function selectSwatch(e) {
     new_mtl = new THREE.MeshPhongMaterial({
       map: txt,
       shininess: color.shininess ? color.shininess : 10 });
-
   } else
 
   {
     new_mtl = new THREE.MeshPhongMaterial({
       color: parseInt('0x' + color.color),
       shininess: color.shininess ? color.shininess : 10 });
-
-
   }
-
+//############################# RETURN ########################
   setMaterial(theModel, activeOption, new_mtl);
+  console.log(theMtl);
 }
 
 // Function - setMaterial
@@ -276,6 +279,9 @@ function setMaterial(parent, type, mtl) {
     if (o.isMesh && o.nameID != null) {
       if (o.nameID == type) {
         o.material = mtl;
+        theMtl = o.material;
+        console.log(o.material);
+        console.log('======================================');
       }
     }
   });
