@@ -22,7 +22,7 @@ export class Item extends Object {
             this.timetokill = -1;
             this.reset = -1;
             this.respawn(player);
-            if (this.itemcode == 1) { // oil 
+            if (this.itemcode == 1) { // oil
                 player.inTime = 3;
                 player.hp += 1;
             }
@@ -51,12 +51,12 @@ export class Item extends Object {
                       if (this.reset < 0) {
 
                             this.x = camera.position.x+this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
-                            this.y =camera.position.y //+ this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+                            this.y =camera.position.y+ this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
                             this.z =camera.position.z+this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
 
                               this.model.position.set(this.x, this.y, this.z);
                           this.reset = 1;
-                          this.timetokill =1000000+ this.getRandomInt(10, 25)*0.1;
+                          this.timetokill = this.getRandomInt(10, 25)*0.1;
                       }
       }
     }

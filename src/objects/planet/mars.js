@@ -11,10 +11,10 @@ export class Mars extends Planet {
     initX = 300;
     initY = 0;
     initZ = 50;
-    scale = [1,1,1];
-    x = -50;
+    scale = [10,10,10];
+    x = 50;
     y = 0;
-    z = 50;
+    z = -50;
     disX = 0;
     disY = 0;
     disZ = 0;
