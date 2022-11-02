@@ -112,6 +112,7 @@ function render() {
     }
     for (const item of game.items) item.move(game.scene, game.player);
     for (const planet of game.planets) planet.move(game.scene, game.player);
+
     //#endregion
     keyboardAction();
 
@@ -151,6 +152,8 @@ function keyboardAction() {
     if (keyboard[68]) player.key_d();
     if (keyboard[37]) player.key_lr(true);
     if (keyboard[39]) player.key_lr(false);
+
+    for (const spaceship of game.spaceship) spaceship.move(game.scene, game.player.camera);
 
     // shoot a bullet
     if (keyboard[32] && player.canShoot <= 0) {

@@ -7,7 +7,7 @@ import { Sun } from "./objects/planet/sun.js";
 import { Earth } from "./objects/planet/Earth.js";
 import { Player } from "./objects/player.js";
 import { Bullet } from "./objects/bullet.js";
-import { Spaceship } from "./objects/spaceship";
+import { Spaceship } from "./objects/spaceship.js";
 
 export class Game {
     loaded = Math.max;
@@ -22,9 +22,11 @@ export class Game {
     items = [new Oil()];
     planets = [new Moon() , new Uranus(), new Earth];
     player = new Player();
+    spaceship = [new Spaceship()];
+
     keyboard = {};
     score = 0;
-    loaded = 0;
+    loaded = -1;
     constructor(infoBoard) {
         let scoreDiv = document.createElement("div");
         scoreDiv.innerHTML = "score : &nbsp;";
@@ -64,6 +66,8 @@ export class Game {
         this.loadObjects(this.enemies, this.gltfloader);
         this.loadObjects(this.items, this.gltfloader);
         this.loadObjects(this.planets, this.gltfloader);
+        this.loadObjects(this.spaceship, this.gltfloader);
+
     }
 
     async loadObjects(objs, loader) {
