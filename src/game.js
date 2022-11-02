@@ -1,5 +1,6 @@
 import { Alien } from "./objects/enemy/alien.js";
 import { Meteor } from "./objects/enemy/meteor.js";
+import { UFO } from "./objects/enemy/ufo.js";
 import { Oil } from "./objects/item/oil.js";
 import { Moon } from "./objects/planet/moon.js";
 import { Uranus } from "./objects/planet/uranus.js";
@@ -22,7 +23,7 @@ export class Game {
     bullets = [];
     /**@type {SuperBullet[]} */
     superbullets = [];
-    enemies = [new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(),new Meteor(),new Meteor(),new Meteor(), new Meteor(),new Meteor(),new Meteor(),new Meteor()];
+    enemies = [new UFO(),new UFO(),new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(),new Meteor(), new Meteor(),new Meteor(),new Meteor(),new Meteor()];
     items = [new Oil(), new Granade()];
     planets = [new Moon() , new Uranus(), new Earth(),new Sun(),new Mars(),new SpacePlanet()];
     backgrounds = [ ];

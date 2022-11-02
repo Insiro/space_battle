@@ -1,8 +1,9 @@
 import { Object } from "../object.js";
 export class Enemy extends Object {
   move(scene, player) {
-      if (this.timetokill <= 0) {
+      if (this.timetokill <= 0 || this.hp<=0) {
           this.reset -= 0.1;
+          this.timetokill = 0;
           if (this.reset < 0) this.respawn(player);
           return;
       }
@@ -49,7 +50,7 @@ export class Enemy extends Object {
       this.x = this.initX + this.disX;
       this.y = this.initY + this.disY;
       this.z = this.initZ + this.disZ;
-      this.hp = 3;
+      this.hp = this.getRandomInt(1,5);
       this.reset = 1;
       this.timeset +=0.0001;
       this.timetokill = this.getRandomInt(10, 25) * 0.1;
