@@ -5,9 +5,10 @@ const MODEL_PATH = "models/space.glb";
 var theModel;
 
 //List to be exported
+//if import this list need to using setMaterial function (type = 'Maquis_Raider')
 var modelInfo = { 
-  mtlC : null ,
-  modelC : null
+  mtlC : null , //to be changed in selectSwatch 
+  modelC : null //to be changed in selectSwatch
 };
 
 var activeOption = 'Maquis_Raider'; //model's shape to mesh
