@@ -1,10 +1,14 @@
-/*REFERENCE: https://tympanus.net/codrops/2019/09/17/how-to-build-a-color-customizer-app-for-a-3d-model-with-three-js/ */
 const LOADER = document.getElementById('js-loader');
 const TRAY = document.getElementById('js-tray-slide');
 const MODEL_PATH = "models/space.glb";
 
 var theModel;
-var theMtl; 
+
+//List to be exported
+var modelInfo = { 
+  mtlC : null ,
+  modelC : null
+};
 
 var activeOption = 'Maquis_Raider'; //model's shape to mesh
 var loaded = false;
@@ -87,6 +91,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // Initial material
 const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0xf1f1f1, shininess: 10 });
+modelInfo.mtlC = INITIAL_MTL;//#######################################
 
 
 // ======= LOADER =======
@@ -107,15 +112,20 @@ loader.load(MODEL_PATH, function (gltf) {
 
   // Add the model to the scene
   scene.add(theModel);
+  
+  this.modelInfo.modelC = gltf.scene;
   /*// Remove the loader
   LOADER.remove();*/
-
+  
 }, 
 // Error 
 undefined, function (error) {
   console.error(error);
 });
 
+
+console.log(modelInfo.modelC);
+console.log(modelInfo.mtlC);
 
 // ======= RENDER =======
 // Add a renderer
@@ -159,15 +169,13 @@ controls.autoRotateSpeed = 0.2; // 30
 animate();
 
 buildColors(colors);
-console.log(TRAY);
 
 
 // ======= SWATCH =======
 // Swatches
 const swatches = document.querySelectorAll(".tray__swatch");
-for (const swatch of swatches) {
+for (const swatch of swatches) { //make addEventListner each tray color
   swatch.addEventListener('click', selectSwatch);
-  console.log(theMtl);
 }
 
 
@@ -177,7 +185,6 @@ var slider = document.getElementById('js-tray'),sliderItems = document.getElemen
 slide(slider, sliderItems);
 
 
-
 // ======= FUNCTION ======
 // Function - Add the textures to the models
 function initColor(parent, type, mtl) {
@@ -185,9 +192,8 @@ function initColor(parent, type, mtl) {
     if (o.isMesh) {
       if (o.name.includes(type)) {
         o.material = mtl;
-        theMtl = o.material;
         o.nameID = type; // Set a new property to identify this object
-        console.log(o.material);
+        //console.log(o.material);
       }
     }
   });
@@ -268,9 +274,15 @@ function selectSwatch(e) {
       color: parseInt('0x' + color.color),
       shininess: color.shininess ? color.shininess : 10 });
   }
-//############################# RETURN ########################
+
+// RETURN 
   setMaterial(theModel, activeOption, new_mtl);
-  console.log(theMtl);
+  
+  modelInfo.mtlC = new_mtl;//######################################
+  modelInfo.modelC = theModel;//#######################################
+
+  console.log(modelInfo.modelC);
+  console.log(modelInfo.mtlC);
 }
 
 // Function - setMaterial
@@ -280,8 +292,6 @@ function setMaterial(parent, type, mtl) {
       if (o.nameID == type) {
         o.material = mtl;
         theMtl = o.material;
-        console.log(o.material);
-        console.log('======================================');
       }
     }
   });
