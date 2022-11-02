@@ -24,6 +24,6 @@ export class Spaceship extends Object {
             camera.position.z + Math.cos(camera.rotation.y + Math.PI / 6) * 0.75
         );
 
-        this.model.rotation.set(camera.rotation.x - 90, camera.rotation.y + 90, camera.rotation.z);
+        this.model.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);
     }
 }

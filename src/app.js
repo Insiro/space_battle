@@ -152,6 +152,8 @@ function keyboardAction() {
     if (keyboard[68]) player.key_d();
     if (keyboard[37]) player.key_lr(true);
     if (keyboard[39]) player.key_lr(false);
+    if (keyboard[38]) player.key_ur(true);
+    if (keyboard[40]) player.key_ur(false);
 
     for (const spaceship of game.spaceship) spaceship.move(game.scene, game.player.camera);
 
