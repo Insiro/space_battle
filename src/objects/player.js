@@ -14,6 +14,7 @@ export class Player extends Object {
         this.height = 1.8;
         this.speed = 0.2;
         this.turnSpeed = Math.PI * 0.02;
+        this.hSpeed = Math.PI * 0.005;
         this.canShoot = 0;
         this.hp = 3;
         this.Score = 0;
@@ -22,9 +23,9 @@ export class Player extends Object {
         this.bullettime = 0; //damage that player can shoot ;
 
         this.x = 0;
-        this.y = this.height;
-        this.z = -5;
-        this.camera.position.set(0, this.height, -5);
+        this.y = 0;
+        this.z = 0;
+        this.camera.position.set(0, this.height, -10);
         this.camera.lookAt(new THREE.Vector3(0, this.height, 0));
     }
     update() {
@@ -40,38 +41,51 @@ export class Player extends Object {
         }
     }
     key_w() {
-        this.camera.position.x -= Math.sin(this.camera.rotation.y) * 2 * this.speed;
-        this.camera.position.z -= -Math.cos(this.camera.rotation.y) * this.speed;
-        this.x = this.camera.position.x;
-        this.y = this.camera.position.y;
+        let diff_x = -Math.sin(this.camera.rotation.y) * 2 * this.speed;
+        let diff_z = Math.cos(this.camera.rotation.y) * this.speed;
+        this.update_position(diff_x, 0, diff_z);
     }
     key_s() {
-        this.camera.position.x += Math.sin(this.camera.rotation.y) * 0.5 * this.speed;
-        this.camera.position.z += -Math.cos(this.camera.rotation.y) * this.speed;
-        this.x = this.camera.position.x;
-        this.z = this.camera.position.z;
+        let diff_x = Math.sin(this.camera.rotation.y) * 0.5 * this.speed;
+        let diff_z = -Math.cos(this.camera.rotation.y) * this.speed;
+        this.update_position(diff_x, 0, diff_z);
     }
     key_a() {
-        this.camera.position.x -= Math.sin(this.camera.rotation.y) * 2 * this.speed;
-        this.camera.position.x += Math.sin(this.camera.rotation.y + Math.PI / 2) * this.speed;
-        this.camera.position.z += -Math.cos(this.camera.rotation.y + Math.PI / 2) * this.speed;
-        this.x = this.camera.position.x;
-        this.z = this.camera.position.z;
+        let diff_x = Math.sin(this.camera.rotation.y + Math.PI / 1.5) * this.speed;
+        let diff_z = -Math.cos(this.camera.rotation.y + Math.PI / 2) * this.speed;
+        this.update_position(diff_x, 0, diff_z);
     }
     key_d() {
-        this.camera.position.x -= Math.sin(this.camera.rotation.y) * 2 * this.speed;
-        this.camera.position.x += Math.sin(this.camera.rotation.y - Math.PI / 2) * this.speed;
-        this.camera.position.z += -Math.cos(this.camera.rotation.y - Math.PI / 2) * this.speed;
-        this.x = this.camera.position.x;
-        this.z = this.camera.position.z;
+        let diff_x = -Math.sin(this.camera.rotation.y + Math.PI / 1.5) * this.speed;
+        let diff_z = -Math.cos(this.camera.rotation.y + Math.PI / 2) * this.speed;
+        this.update_position(diff_x, 0, diff_z);
     }
+
     /**
      *left key or right key
      * @param {boolean} left
      */
     key_lr(left) {
-        const rotate = left ? -this.turnSpeed : this.turnSpeed;
-        this.camera.rotation.y -= rotate;
+        const rotate = left ? this.turnSpeed : -this.turnSpeed;
+        this.model.rotation.y -= rotate;
+    }
+    /**
+     * up key or down key
+     * @param {boolean} up
+     */
+    key_ud(up) {
+        const rotate_up = up ? this.hSpeed : -this.hSpeed;
+        this.model.rotation.x -= rotate_up;
+    }
+    update_position(diff_x, diff_y, diff_z) {
+        let camera = this.camera;
+        // camera.position.x += diff_x;
+        // camera.position.y += diff_y;
+        // camera.position.z += diff_z;
+        this.x += diff_x;
+        this.y += diff_y;
+        this.z += diff_z;
+        this.model.position.set(this.x, this.y, this.z);
     }
     async setModel(model) {
         super.setModel(model);
@@ -90,5 +104,7 @@ export class Player extends Object {
         this.model.traverse((o) => {
             if (o.isMesh && o.nameID != null) if (o.nameID == "Maquis_Raider") o.material = new THREE.MeshPhongMaterial(mtlInfo);
         });
+        // this.model.children[0].rotation.y -= 4.5;
+        this.model.add(this.camera);
     }
 }
