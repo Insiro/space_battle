@@ -47,9 +47,9 @@ export class Item extends Object {
 
             camera.updateMatrixWorld();
             if (this.reset < 0) {
-                this.x = camera.position.x + this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
-                this.y = camera.position.y; //+ this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
-                this.z = camera.position.z + this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+                this.x = camera.position.x + this.getRandomInt(200,300) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+                this.y = camera.position.y+ this.getRandomInt(200, 300) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+                this.z = camera.position.z + this.getRandomInt(200, 300) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
 
                 this.model.position.set(this.x, this.y, this.z);
                 this.reset = 1;

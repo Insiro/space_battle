@@ -11,7 +11,7 @@ export class Earth extends Planet {
     initX = 300;
     initY = 100;
     initZ = -300;
-    scale = [0.3, 0.3, 0.3];
+    scale = [0.2, 0.2, 0.2];
     x = 150;
     y = 0;
     z = -150;

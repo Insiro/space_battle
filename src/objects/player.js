@@ -26,7 +26,10 @@ export class Player extends Object {
         this.x = 0;
         this.y = 0;
         this.z = 0;
-        if (this.model) this.model.position.set(this.x, this.y, this.z);
+        if (this.model) {
+          this.model.position.set(this.x, this.y, this.z);
+          this.model.rotation.set(this.x, this.y, this.z);
+        }
     }
     update() {
         if (this.canShoot > 0) this.canShoot -= 1;
