@@ -7,6 +7,7 @@ export class Player extends Object {
     constructor(modelInfo) {
         super();
         this.camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
+
         this.modelInfo = modelInfo;
         this.reset();
     }
@@ -25,8 +26,7 @@ export class Player extends Object {
         this.x = 0;
         this.y = 0;
         this.z = 0;
-        this.camera.position.set(0, this.height, -10);
-        this.camera.lookAt(new THREE.Vector3(0, this.height, 0));
+        if (this.model) this.model.position.set(this.x, this.y, this.z);
     }
     update() {
         if (this.canShoot > 0) this.canShoot -= 1;
@@ -41,23 +41,23 @@ export class Player extends Object {
         }
     }
     key_w() {
-        let diff_x = -Math.sin(this.camera.rotation.y) * 2 * this.speed;
-        let diff_z = Math.cos(this.camera.rotation.y) * this.speed;
+        let diff_x = -Math.sin(-this.model.rotation.y) * 2 * this.speed;
+        let diff_z = Math.cos(-this.model.rotation.y) * this.speed;
         this.update_position(diff_x, 0, diff_z);
     }
     key_s() {
-        let diff_x = Math.sin(this.camera.rotation.y) * 0.5 * this.speed;
-        let diff_z = -Math.cos(this.camera.rotation.y) * this.speed;
+        let diff_x = Math.sin(-this.model.rotation.y) * 0.5 * this.speed;
+        let diff_z = -Math.cos(-this.model.rotation.y) * this.speed;
         this.update_position(diff_x, 0, diff_z);
     }
     key_a() {
-        let diff_x = Math.sin(this.camera.rotation.y + Math.PI / 1.5) * this.speed;
-        let diff_z = -Math.cos(this.camera.rotation.y + Math.PI / 2) * this.speed;
+        let diff_x = Math.sin(this.model.rotation.y + Math.PI / 1.5) * this.speed;
+        let diff_z = -Math.cos(this.model.rotation.y + Math.PI / 2) * this.speed;
         this.update_position(diff_x, 0, diff_z);
     }
     key_d() {
-        let diff_x = -Math.sin(this.camera.rotation.y + Math.PI / 1.5) * this.speed;
-        let diff_z = -Math.cos(this.camera.rotation.y + Math.PI / 2) * this.speed;
+        let diff_x = -Math.sin(this.model.rotation.y + Math.PI / 1.5) * this.speed;
+        let diff_z = Math.cos(this.model.rotation.y + Math.PI / 2) * this.speed;
         this.update_position(diff_x, 0, diff_z);
     }
 
@@ -78,17 +78,24 @@ export class Player extends Object {
         this.model.rotation.x -= rotate_up;
     }
     update_position(diff_x, diff_y, diff_z) {
-        let camera = this.camera;
-        // camera.position.x += diff_x;
-        // camera.position.y += diff_y;
-        // camera.position.z += diff_z;
         this.x += diff_x;
         this.y += diff_y;
         this.z += diff_z;
         this.model.position.set(this.x, this.y, this.z);
+        console.log(this.model.rotation);
+        /**@type {THREE.PerspectiveCamera} */
+        let camera = this.camera;
+        console.log(this.camera);
+        console.log(this.model.position);
     }
-    async setModel(model) {
+    async setModel(obj3d, model) {
+        obj3d.add(model);
+        this.camera.position.set(0, this.height, -10);
+        this.camera.lookAt(new THREE.Vector3(0, this.height, 0));
+        obj3d.add(this.camera);
         super.setModel(model);
+        this.spm = this.model;
+        this.model = obj3d;
         let modelInfo = this.modelInfo;
         console.log(modelInfo);
         let mtlInfo = { shininess: 10 };
@@ -102,9 +109,7 @@ export class Player extends Object {
         } else mtlInfo["color"] = parseInt("0x" + modelInfo.color);
 
         this.model.traverse((o) => {
-            if (o.isMesh && o.nameID != null) if (o.nameID == "Maquis_Raider") o.material = new THREE.MeshPhongMaterial(mtlInfo);
+            if (o.isMesh && o.nameID == "Maquis_Raider") o.material = new THREE.MeshPhongMaterial(mtlInfo);
         });
-        // this.model.children[0].rotation.y -= 4.5;
-        this.model.add(this.camera);
     }
 }

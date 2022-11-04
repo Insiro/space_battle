@@ -90,13 +90,32 @@ export class Game {
         this.player.reset();
     }
     async loadAll() {
-        this.loadObjects([this.player], this.gltfloader);
+        // this.loadObjects([this.player], this.gltfloader);
+        this.loadPlayer(this.gltfloader);
         this.loadObjects(this.enemies, this.gltfloader);
         this.loadObjects(this.items, this.gltfloader);
         this.loadObjects(this.planets, this.gltfloader);
         //this.loadObjects(this.backgrounds, this.gltfloader);
     }
-
+    async loadPlayer(loader) {
+        let scene = this.scene;
+        let obj = this.player;
+        await loader.load(
+            obj.gltf_path,
+            async function (gltf) {
+                let model = gltf.scene.children[0];
+                let obj3d = new THREE.Object3D();
+                model.rotation.y += THREE.Math.radToDeg(90);
+                if (model.light instanceof THREE.Object3D) scene.add(model.light);
+                await obj.setModel(obj3d, model);
+                scene.add(obj3d);
+                window.game.loaded += 1;
+                window.game.updateLoaded();
+            },
+            undefined,
+            (error) => console.error(error)
+        );
+    }
     async loadObjects(objs, loader) {
         let scene = this.scene;
         for (const obj of objs) {
