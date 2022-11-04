@@ -1,6 +1,6 @@
 import { Game } from "./game.js";
 import { Bullet } from "./objects/bullet.js";
-import {SuperBullet} from "./objects/superBullet.js";
+import { SuperBullet } from "./objects/superBullet.js";
 var USE_WIREFRAME = false;
 
 var loadingScreen = {
@@ -12,6 +12,8 @@ let dialog;
 // Bullets array
 
 function init() {
+    let urlQuery = new URLSearchParams(window.location.search);
+    let modelInfo = JSON.parse(urlQuery.get("q"));
     dialog = document.getElementById("dialog");
     dialog.childNodes[8].onclick = () => saveScores();
     dialog.childNodes[11].onclick = () => {
@@ -20,7 +22,7 @@ function init() {
         render();
     };
     let infoBoard = document.getElementById("infoBoard");
-    window.game = new Game(infoBoard);
+    window.game = new Game(infoBoard, modelInfo);
     const game = window.game;
     game.loadAll();
     game.reset();
@@ -35,7 +37,6 @@ function init() {
     loadingScreen.camera.lookAt(loadingScreen.box.position);
     loadingScreen.scene.add(loadingScreen.box);
     //#endregion
- 
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
     scene.add(ambientLight);
@@ -157,21 +158,16 @@ function keyboardAction() {
     if (keyboard[32] && player.canShoot <= 0) {
         // spacebar key
         // creates a bullet as a Mesh object
-        if(player.bullettime ==0)
-        {
-
-          let bullet = new Bullet(player);
-          window.game.bullets.push(bullet);
-          window.game.scene.add(bullet.model);
-          player.canShoot = 10;
-        }
-        else
-        {
-
-          let superbullet = new SuperBullet(player);
-          window.game.bullets.push(superbullet);
-          window.game.scene.add(superbullet.model);
-          player.canShoot = 10;
+        if (player.bullettime == 0) {
+            let bullet = new Bullet(player);
+            window.game.bullets.push(bullet);
+            window.game.scene.add(bullet.model);
+            player.canShoot = 10;
+        } else {
+            let superbullet = new SuperBullet(player);
+            window.game.bullets.push(superbullet);
+            window.game.scene.add(superbullet.model);
+            player.canShoot = 10;
         }
     }
 }

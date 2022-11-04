@@ -1,9 +1,13 @@
 import { Object } from "./object.js";
 
 export class Player extends Object {
-    constructor() {
+    gltf_path = "./models/player/space.glb";
+    scale = [0.3, 0.3, 0.3];
+    /**@param {PlayerTextureInfo|undefined} modelInfo */
+    constructor(modelInfo) {
         super();
         this.camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
+        this.modelInfo = modelInfo;
         this.reset();
     }
     reset() {
@@ -25,9 +29,9 @@ export class Player extends Object {
     }
     update() {
         if (this.canShoot > 0) this.canShoot -= 1;
-        if( this.bullettime >0 ) this.bullettime -=0.025;
+        if (this.bullettime > 0) this.bullettime -= 0.025;
         else {
-          this.bullettime =0;
+            this.bullettime = 0;
         }
         if (this.inTime > 0) this.inTime -= 0.025;
         else {
@@ -68,5 +72,23 @@ export class Player extends Object {
     key_lr(left) {
         const rotate = left ? -this.turnSpeed : this.turnSpeed;
         this.camera.rotation.y -= rotate;
+    }
+    async setModel(model) {
+        super.setModel(model);
+        let modelInfo = this.modelInfo;
+        console.log(modelInfo);
+        let mtlInfo = { shininess: 10 };
+        if (modelInfo.texture) {
+            const loader = new THREE.TextureLoader();
+            let txt = await loader.load(modelInfo.texture);
+            txt.repeat.set(modelInfo.size[0], modelInfo.size[1], modelInfo.size[2]);
+            txt.wrapS = THREE.RepeatWrapping;
+            txt.wrapT = THREE.RepeatWrapping;
+            mtlInfo["map"] = txt;
+        } else mtlInfo["color"] = parseInt("0x" + modelInfo.color);
+
+        this.model.traverse((o) => {
+            if (o.isMesh && o.nameID != null) if (o.nameID == "Maquis_Raider") o.material = new THREE.MeshPhongMaterial(mtlInfo);
+        });
     }
 }

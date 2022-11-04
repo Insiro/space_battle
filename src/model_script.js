@@ -1,89 +1,82 @@
-const LOADER = document.getElementById('js-loader');
-const TRAY = document.getElementById('js-tray-slide');
-const MODEL_PATH = "models/space.glb";
+/*REFERENCE: https://tympanus.net/codrops/2019/09/17/how-to-build-a-color-customizer-app-for-a-3d-model-with-three-js/ */
+const LOADER = document.getElementById("js-loader");
+const TRAY = document.getElementById("js-tray-slide");
+const MODEL_PATH = "./models/player/space.glb";
 
 var theModel;
 
-//List to be exported
-//if import this list need to using setMaterial function (type = 'Maquis_Raider')
-var modelInfo = { 
-  mtlC : null , //to be changed in selectSwatch 
-  modelC : null //to be changed in selectSwatch
-};
-
-var activeOption = 'Maquis_Raider'; //model's shape to mesh
+var activeOption = "Maquis_Raider";
 var loaded = false;
 var cameraFar = 5;
 
 const colors = [
-{ texture: 'res/wood_.jpg', size: [2, 2, 2], shininess: 60 },
-{ texture: 'res/fabric_.jpg', size: [4, 4, 4], shininess: 0 },
-{ texture: 'res/pattern_.jpg', size: [8, 8, 8], shininess: 10 },
-{ texture: 'res/denim_.jpg', size: [3, 3, 3], shininess: 0 },
-{ texture: 'res/quilt_.jpg', size: [6, 6, 6], shininess: 0 },
-{ color: '131417' },
-{ color: '374047' },
-{ color: '5f6e78' },
-{ color: '7f8a93' },
-{ color: '97a1a7' },
-{ color: 'acb4b9' },
-{ color: 'DF9998' },
-{ color: '7C6862' },
-{ color: 'A3AB84' },
-{ color: 'D6CCB1' },
-{ color: 'F8D5C4' },
-{ color: 'A3AE99' },
-{ color: 'EFF2F2' },
-{ color: 'B0C5C1' },
-{ color: '8B8C8C' },
-{ color: '565F59' },
-{ color: 'CB304A' },
-{ color: 'FED7C8' },
-{ color: 'C7BDBD' },
-{ color: '3DCBBE' },
-{ color: '264B4F' },
-{ color: '389389' },
-{ color: '85BEAE' },
-{ color: 'F2DABA' },
-{ color: 'F2A97F' },
-{ color: 'D85F52' },
-{ color: 'D92E37' },
-{ color: 'FC9736' },
-{ color: 'F7BD69' },
-{ color: 'A4D09C' },
-{ color: '4C8A67' },
-{ color: '25608A' },
-{ color: '75C8C6' },
-{ color: 'F5E4B7' },
-{ color: 'E69041' },
-{ color: 'E56013' },
-{ color: '11101D' },
-{ color: '630609' },
-{ color: 'C9240E' },
-{ color: 'EC4B17' },
-{ color: '281A1C' },
-{ color: '4F556F' },
-{ color: '64739B' },
-{ color: 'CDBAC7' },
-{ color: '946F43' },
-{ color: '66533C' },
-{ color: '173A2F' },
-{ color: '153944' },
-{ color: '27548D' },
-{ color: '438AAC' }
+    { texture: "./models/player/wood_.jpg", size: [2, 2, 2], shininess: 60 },
+    { texture: "./models/player/fabric_.jpg", size: [4, 4, 4], shininess: 0 },
+    { texture: "./models/player/pattern_.jpg", size: [8, 8, 8], shininess: 10 },
+    { texture: "./models/player/denim_.jpg", size: [3, 3, 3], shininess: 0 },
+    { texture: "./models/player/quilt_.jpg", size: [6, 6, 6], shininess: 0 },
+    { color: "131417" },
+    { color: "374047" },
+    { color: "5f6e78" },
+    { color: "7f8a93" },
+    { color: "97a1a7" },
+    { color: "acb4b9" },
+    { color: "DF9998" },
+    { color: "7C6862" },
+    { color: "A3AB84" },
+    { color: "D6CCB1" },
+    { color: "F8D5C4" },
+    { color: "A3AE99" },
+    { color: "EFF2F2" },
+    { color: "B0C5C1" },
+    { color: "8B8C8C" },
+    { color: "565F59" },
+    { color: "CB304A" },
+    { color: "FED7C8" },
+    { color: "C7BDBD" },
+    { color: "3DCBBE" },
+    { color: "264B4F" },
+    { color: "389389" },
+    { color: "85BEAE" },
+    { color: "F2DABA" },
+    { color: "F2A97F" },
+    { color: "D85F52" },
+    { color: "D92E37" },
+    { color: "FC9736" },
+    { color: "F7BD69" },
+    { color: "A4D09C" },
+    { color: "4C8A67" },
+    { color: "25608A" },
+    { color: "75C8C6" },
+    { color: "F5E4B7" },
+    { color: "E69041" },
+    { color: "E56013" },
+    { color: "11101D" },
+    { color: "630609" },
+    { color: "C9240E" },
+    { color: "EC4B17" },
+    { color: "281A1C" },
+    { color: "4F556F" },
+    { color: "64739B" },
+    { color: "CDBAC7" },
+    { color: "946F43" },
+    { color: "66533C" },
+    { color: "173A2F" },
+    { color: "153944" },
+    { color: "27548D" },
+    { color: "438AAC" },
 ];
-
-
+let param = "";
 // ======= INIIAL =======
 // Init the scene & background
 const loader2 = new THREE.TextureLoader();
 const scene = new THREE.Scene();
 // Set background
-const BACKGROUND_WEBP = loader2.load("res/bg.webp");
+const BACKGROUND_WEBP = loader2.load("img/bg.webp");
 scene.background = BACKGROUND_WEBP;
 
 // Init the canvas
-const canvas = document.querySelector('#c');
+const canvas = document.querySelector("#c");
 
 // Init the renderer
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -92,46 +85,41 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // Initial material
 const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0xf1f1f1, shininess: 10 });
-modelInfo.mtlC = INITIAL_MTL;//#######################################
-
 
 // ======= LOADER =======
 // Init the object loader
 var loader = new THREE.GLTFLoader();
 
-loader.load(MODEL_PATH, function (gltf) {
-  theModel = gltf.scene;
+loader.load(
+    MODEL_PATH,
+    function (gltf) {
+        theModel = gltf.scene;
 
-  // Set the models initial scale   
-  theModel.scale.set(0.8, 0.8, 0.8);
+        // Set the models initial scale
+        theModel.scale.set(0.8, 0.8, 0.8);
 
-  // Offset the y position a bit
-  theModel.position.y = 0.1;
+        // Offset the y position a bit
+        theModel.position.y = 0.1;
 
-  // Set initial textures
-  initColor(theModel, "Maquis_Raider", INITIAL_MTL);
+        // Set initial textures
+        initColor(theModel, "Maquis_Raider", INITIAL_MTL);
 
-  // Add the model to the scene
-  scene.add(theModel);
-  
-  this.modelInfo.modelC = gltf.scene;
-  /*// Remove the loader
+        // Add the model to the scene
+        scene.add(theModel);
+
+        /*// Remove the loader
   LOADER.remove();*/
-  
-}, 
-// Error 
-undefined, function (error) {
-  console.error(error);
-});
-
-
-console.log(modelInfo.modelC);
-console.log(modelInfo.mtlC);
+    },
+    // Error
+    undefined,
+    function (error) {
+        console.error(error);
+    }
+);
 
 // ======= RENDER =======
 // Add a renderer
 document.body.appendChild(renderer.domElement);
-
 
 // ======= CAMERA =======
 // Add a camera
@@ -139,12 +127,11 @@ var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHei
 camera.position.z = cameraFar;
 camera.position.x = 0;
 
-
 // ======= LIGHT =======
 // Add lights
 var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
 hemiLight.position.set(0, 50, 0);
-// Add hemisphere light to scene   
+// Add hemisphere light to scene
 scene.add(hemiLight);
 
 // Add direction lights
@@ -152,12 +139,11 @@ var dirLight = new THREE.DirectionalLight(0xffffff, 0.54);
 dirLight.position.set(-8, 12, 8);
 dirLight.castShadow = true;
 dirLight.shadow.mapSize = new THREE.Vector2(1024, 1024);
-// Add directional Light to scene    
+// Add directional Light to scene
 scene.add(dirLight);
 
-
 // ======= CONTROL =======
-// Add controls about model
+// Add controls
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.maxPolarAngle = Math.PI / 2;
 controls.minPolarAngle = Math.PI / 3;
@@ -171,195 +157,179 @@ animate();
 
 buildColors(colors);
 
-
 // ======= SWATCH =======
 // Swatches
 const swatches = document.querySelectorAll(".tray__swatch");
-for (const swatch of swatches) { //make addEventListner each tray color
-  swatch.addEventListener('click', selectSwatch);
+for (const swatch of swatches) {
+    swatch.addEventListener("click", selectSwatch);
 }
-
 
 // ======= SLIDER =======
 // Slider
-var slider = document.getElementById('js-tray'),sliderItems = document.getElementById('js-tray-slide'),difference;
+var slider = document.getElementById("js-tray"),
+    sliderItems = document.getElementById("js-tray-slide"),
+    difference;
 slide(slider, sliderItems);
-
 
 // ======= FUNCTION ======
 // Function - Add the textures to the models
 function initColor(parent, type, mtl) {
-  parent.traverse(o => {
-    if (o.isMesh) {
-      if (o.name.includes(type)) {
-        o.material = mtl;
-        o.nameID = type; // Set a new property to identify this object
-        //console.log(o.material);
-      }
-    }
-  });
+    parent.traverse((o) => {
+        if (o.isMesh) {
+            if (o.name.includes(type)) {
+                o.material = mtl;
+                o.nameID = type; // Set a new property to identify this object
+            }
+        }
+    });
 }
 
 // Function - New resizing method
 function resizeRendererToDisplaySize(renderer) {
-  const canvas = renderer.domElement;
-  var width = window.innerWidth;
-  var height = window.innerHeight;
-  var canvasPixelWidth = canvas.width / window.devicePixelRatio;
-  var canvasPixelHeight = canvas.height / window.devicePixelRatio;
+    const canvas = renderer.domElement;
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var canvasPixelWidth = canvas.width / window.devicePixelRatio;
+    var canvasPixelHeight = canvas.height / window.devicePixelRatio;
 
-  const needResize = canvasPixelWidth !== width || canvasPixelHeight !== height;
-  if (needResize) {
-
-    renderer.setSize(width, height, false);
-  }
-  return needResize;
+    const needResize = canvasPixelWidth !== width || canvasPixelHeight !== height;
+    if (needResize) {
+        renderer.setSize(width, height, false);
+    }
+    return needResize;
 }
 
 // Function - Animate
 function animate() {
+    controls.update();
 
-  controls.update();
-  
-  renderer.render(scene, camera);
-  requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
 
-  //While rendering, function will resize
-  if (resizeRendererToDisplaySize(renderer)) {
-    const canvas = renderer.domElement;
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
-  }
-
+    //While rendering, function will resize
+    if (resizeRendererToDisplaySize(renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+    }
 }
 
-// Function - Build Colors (Connect colors tray and real value)
+// Function - Build Colors
 function buildColors(colors) {
-  for (let [i, color] of colors.entries()) {
-    let swatch = document.createElement('div');
-    swatch.classList.add('tray__swatch');
+    for (let [i, color] of colors.entries()) {
+        let swatch = document.createElement("div");
+        swatch.classList.add("tray__swatch");
 
-    if (color.texture)
-    {
-      swatch.style.backgroundImage = "url(" + color.texture + ")";
-    } else
-    {
-      swatch.style.background = "#" + color.color;
+        if (color.texture) {
+            swatch.style.backgroundImage = "url(" + color.texture + ")";
+        } else {
+            swatch.style.background = "#" + color.color;
+        }
+
+        swatch.setAttribute("data-key", i);
+        TRAY.append(swatch);
     }
-
-    swatch.setAttribute('data-key', i);
-    TRAY.append(swatch);
-  }
 }
 
 // Function - selectSwatch
 function selectSwatch(e) {
-  var color = colors[parseInt(e.target.dataset.key)];
-  var new_mtl;
+    let color = colors[parseInt(e.target.dataset.key)];
+    let new_mtl;
 
-  if (color.texture) {
+    if (color.texture) {
+        let txt = new THREE.TextureLoader().load(color.texture);
 
-    let txt = new THREE.TextureLoader().load(color.texture);
+        txt.repeat.set(color.size[0], color.size[1], color.size[2]);
+        txt.wrapS = THREE.RepeatWrapping;
+        txt.wrapT = THREE.RepeatWrapping;
 
-    txt.repeat.set(color.size[0], color.size[1], color.size[2]);
-    txt.wrapS = THREE.RepeatWrapping;
-    txt.wrapT = THREE.RepeatWrapping;
-
-    new_mtl = new THREE.MeshPhongMaterial({
-      map: txt,
-      shininess: color.shininess ? color.shininess : 10 });
-  } else
-
-  {
-    new_mtl = new THREE.MeshPhongMaterial({
-      color: parseInt('0x' + color.color),
-      shininess: color.shininess ? color.shininess : 10 });
-  }
-
-// RETURN 
-  setMaterial(theModel, activeOption, new_mtl);
-  
-  modelInfo.mtlC = new_mtl;//######################################
-  modelInfo.modelC = theModel;//#######################################
-
-  console.log(modelInfo.modelC);
-  console.log(modelInfo.mtlC);
+        new_mtl = new THREE.MeshPhongMaterial({
+            map: txt,
+            shininess: color.shininess ? color.shininess : 10,
+        });
+    } else {
+        new_mtl = new THREE.MeshPhongMaterial({
+            color: parseInt("0x" + color.color),
+            shininess: color.shininess ? color.shininess : 10,
+        });
+    }
+    console.log(color);
+    param = JSON.stringify(color);
+    document.getElementById("startbtn").href = "./game.html?q=" + param;
+    setMaterial(theModel, activeOption, new_mtl);
 }
 
 // Function - setMaterial
 function setMaterial(parent, type, mtl) {
-  parent.traverse(o => {
-    if (o.isMesh && o.nameID != null) {
-      if (o.nameID == type) {
-        o.material = mtl;
-        theMtl = o.material;
-      }
-    }
-  });
+    parent.traverse((o) => {
+        if (o.isMesh && o.nameID != null) {
+            if (o.nameID == type) {
+                o.material = mtl;
+            }
+        }
+    });
 }
 
 // Function - slide
 function slide(wrapper, items) {
-  var posX1 = 0,
-  posX2 = 0,
-  posInitial,
-  threshold = 20,
-  posFinal,
-  slides = items.getElementsByClassName('tray__swatch');
+    var posX1 = 0,
+        posX2 = 0,
+        posInitial,
+        threshold = 20,
+        posFinal,
+        slides = items.getElementsByClassName("tray__swatch");
 
-  // Mouse events
-  items.onmousedown = dragStart;
+    // Mouse events
+    items.onmousedown = dragStart;
 
-  // Touch events
-  items.addEventListener('touchstart', dragStart);
-  items.addEventListener('touchend', dragEnd);
-  items.addEventListener('touchmove', dragAction);
+    // Touch events
+    items.addEventListener("touchstart", dragStart);
+    items.addEventListener("touchend", dragEnd);
+    items.addEventListener("touchmove", dragAction);
 
-// Function - dragStart
-  function dragStart(e) {
-    e = e || window.event;
-    posInitial = items.offsetLeft;
-    difference = sliderItems.offsetWidth - slider.offsetWidth;
-    difference = difference * -1;
+    // Function - dragStart
+    function dragStart(e) {
+        e = e || window.event;
+        posInitial = items.offsetLeft;
+        difference = sliderItems.offsetWidth - slider.offsetWidth;
+        difference = difference * -1;
 
-    if (e.type == 'touchstart') {
-      posX1 = e.touches[0].clientX;
-    } else {
-      posX1 = e.clientX;
-      document.onmouseup = dragEnd;
-      document.onmousemove = dragAction;
-    }
-  }
-
-  // Function - dragAction
-  function dragAction(e) {
-    e = e || window.event;
-
-    if (e.type == 'touchmove') {
-      posX2 = posX1 - e.touches[0].clientX;
-      posX1 = e.touches[0].clientX;
-    } else {
-      posX2 = posX1 - e.clientX;
-      posX1 = e.clientX;
+        if (e.type == "touchstart") {
+            posX1 = e.touches[0].clientX;
+        } else {
+            posX1 = e.clientX;
+            document.onmouseup = dragEnd;
+            document.onmousemove = dragAction;
+        }
     }
 
-    if (items.offsetLeft - posX2 <= 0 && items.offsetLeft - posX2 >= difference) {
-      items.style.left = items.offsetLeft - posX2 + "px";
+    // Function - dragAction
+    function dragAction(e) {
+        e = e || window.event;
+
+        if (e.type == "touchmove") {
+            posX2 = posX1 - e.touches[0].clientX;
+            posX1 = e.touches[0].clientX;
+        } else {
+            posX2 = posX1 - e.clientX;
+            posX1 = e.clientX;
+        }
+
+        if (items.offsetLeft - posX2 <= 0 && items.offsetLeft - posX2 >= difference) {
+            items.style.left = items.offsetLeft - posX2 + "px";
+        }
     }
-  }
 
-// Function - dragEnd
-  function dragEnd(e) {
-    posFinal = items.offsetLeft;
-    if (posFinal - posInitial < -threshold) {
+    // Function - dragEnd
+    function dragEnd(e) {
+        posFinal = items.offsetLeft;
+        if (posFinal - posInitial < -threshold) {
+        } else if (posFinal - posInitial > threshold) {
+        } else {
+            items.style.left = posInitial + "px";
+        }
 
-    } else if (posFinal - posInitial > threshold) {
-
-    } else {
-      items.style.left = posInitial + "px";
+        document.onmouseup = null;
+        document.onmousemove = null;
     }
-
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
 }

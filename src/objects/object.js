@@ -1,6 +1,6 @@
 export class Object {
     light = null;
-    setModel(model) {
+    async setModel(model) {
         model.scale.set(this.scale[0], this.scale[1], this.scale[2]);
         model.position.set(this.x, this.y, this.z);
         this.model = model;
