@@ -74,13 +74,13 @@ export class Player extends Object {
     async setModel(obj3d, model) {
         this.camera.position.set(0, this.height, -10);
         this.camera.lookAt(new THREE.Vector3(0, this.height, 0));
+        if (this.modelInfo !== undefined) await this.set_texture(model);
         obj3d.add(model);
         obj3d.add(this.camera);
         super.setModel(model);
         this.model = obj3d;
-
-        //set texture
-        if (this.modelInfo == undefined) return;
+    }
+    async set_texture(model) {
         let modelInfo = this.modelInfo;
         let mtlInfo = { shininess: 10 };
         if (modelInfo.texture) {
@@ -91,8 +91,6 @@ export class Player extends Object {
             txt.wrapT = THREE.RepeatWrapping;
             mtlInfo["map"] = txt;
         } else mtlInfo["color"] = parseInt("0x" + modelInfo.color);
-        this.model.traverse((o) => {
-            if (o.isMesh && o.nameID == "Maquis_Raider") o.material = new THREE.MeshPhongMaterial(mtlInfo);
-        });
+        model.material = new THREE.MeshPhongMaterial(mtlInfo);
     }
 }
