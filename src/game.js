@@ -3,14 +3,12 @@ import { Meteor } from "./objects/enemy/meteor.js";
 import { UFO } from "./objects/enemy/ufo.js";
 import { Oil } from "./objects/item/oil.js";
 import { Moon } from "./objects/planet/moon.js";
-import { Uranus } from "./objects/planet/uranus.js";
 import { Sun } from "./objects/planet/sun.js";
 import { Earth } from "./objects/planet/earth.js";
 import { Mars } from "./objects/planet/mars.js";
 import { Player } from "./objects/player.js";
 import { BulletBase } from "./objects/bullet/bulletbase.js";
 import { Granade } from "./objects/item/granade.js";
-import { SpacePlanet } from "./objects/planet/spaceplanet.js";
 
 class PlayerTextureInfo {
     /**@type {number | undefined}*/
@@ -34,7 +32,7 @@ export class Game {
     bullets = [];
     enemies = [new UFO(), new UFO(), new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
     items = [new Oil(), new Granade(), new Oil(), new Granade(), new Oil(), new Granade()];
-    planets = [new Moon(), new Uranus(), new Earth(), new Sun(), new Mars(), new SpacePlanet()];
+    planets = [new Moon(), new Earth(), new Sun(), new Mars()];
     backgrounds = [];
     player;
     keyboard = {};

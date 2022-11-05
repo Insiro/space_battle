@@ -5,10 +5,8 @@ export class Earth extends Planet {
     initY = 100;
     initZ = -300;
     scale = [0.2, 0.2, 0.2];
-    x = 150;
+    x = -150;
     y = 0;
-    z = -150;
+    z = 150;
     hp = 3;
-    damage = 15;
-    background = 0;
 }

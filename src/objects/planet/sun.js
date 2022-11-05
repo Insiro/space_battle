@@ -9,6 +9,4 @@ export class Sun extends Planet {
     y = 0;
     z = -50;
     hp = 3;
-    damage = 0;
-    background = 1;
 }
