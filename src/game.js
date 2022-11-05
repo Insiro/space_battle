@@ -8,9 +8,8 @@ import { Sun } from "./objects/planet/sun.js";
 import { Earth } from "./objects/planet/earth.js";
 import { Mars } from "./objects/planet/mars.js";
 import { Player } from "./objects/player.js";
-import { Bullet } from "./objects/bullet.js";
+import { BulletBase } from "./objects/bullet/bulletbase.js";
 import { Granade } from "./objects/item/granade.js";
-import { SuperBullet } from "./objects/superBullet.js";
 import { SpacePlanet } from "./objects/planet/spaceplanet.js";
 
 class PlayerTextureInfo {
@@ -31,12 +30,10 @@ export class Game {
     gltfloader = new THREE.GLTFLoader();
     /**@type {THREE.Scene} */
     scene = new THREE.Scene();
-    /**@type {Bullet[]} */
+    /**@type {BulletBase[]} */
     bullets = [];
-    /**@type {SuperBullet[]} */
-    superbullets = [];
     enemies = [new UFO(), new UFO(), new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
-    items = [new Oil(), new Granade(),new Oil(), new Granade(),new Oil(), new Granade()];
+    items = [new Oil(), new Granade(), new Oil(), new Granade(), new Oil(), new Granade()];
     planets = [new Moon(), new Uranus(), new Earth(), new Sun(), new Mars(), new SpacePlanet()];
     backgrounds = [];
     player;
@@ -68,8 +65,6 @@ export class Game {
         for (const item of this.items) this.scene.remove(item);
         for (const planet of this.planets) this.scene.remove(planet);
         for (const bullet of this.bullets) this.scene.remove(bullet);
-        for (const superbullet of this.superbullets) this.scene.remove(superbullet);
-        //for (const background of this.backgrounds) this.scene.remove(background);
     }
     async reset() {
         this.remove_objects();
@@ -79,23 +74,16 @@ export class Game {
         }
         this.bullets = [];
 
-        for (const superbullet of this.superbullets) {
-            this.scene.remove(superbullet.model);
-            superbullet.alive_time = 0;
-        }
-        this.superbullets = [];
         for (const enemy of this.enemies) enemy.respawn(this.player);
         for (const item of this.items) item.respawn(this.player);
         this.score = 0;
         this.player.reset();
     }
     async loadAll() {
-        // this.loadObjects([this.player], this.gltfloader);
         this.loadPlayer(this.gltfloader);
         this.loadObjects(this.enemies, this.gltfloader);
         this.loadObjects(this.items, this.gltfloader);
         this.loadObjects(this.planets, this.gltfloader);
-        //this.loadObjects(this.backgrounds, this.gltfloader);
     }
     async loadPlayer(loader) {
         let scene = this.scene;

@@ -16,11 +16,8 @@ export class Granade extends Item {
     itemcode = 2;
     scale = [0.01, 0.01, 0.01];
 
-
-
-    /**
-     *
-     * @param {THREE.Scene} scene
-     * @param {*} player
-     */
+    onCollision(player) {
+        player.bullettime = 15;
+        player.inTime = 3;
+    }
 }

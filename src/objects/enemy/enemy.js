@@ -51,7 +51,7 @@ export class Enemy extends Object {
         this.z = this.initZ + this.disZ;
         this.hp = this.getRandomInt(1, 5);
         this.reset = 1;
-        this.timeset = (this.timeset+ 0.00001)>0.0016 ? 0.00125 :this.timeset+ 0.00001 ;
+        this.timeset = this.timeset + 0.00001 > 0.0016 ? 0.00125 : this.timeset + 0.00001;
         this.timetokill = this.getRandomInt(15, 25) * 0.1;
     }
 }

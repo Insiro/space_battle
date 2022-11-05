@@ -18,13 +18,14 @@
                 <input placeholder="user name" /><br />
                 <button>save score</button><br />
                 <button>restart game</button>
+                <div id="ranking"></div>
             </dialog>
             <div></div>
         </div>
-        <span style="position: absolute; top: 0px; left: 0px">
-            WASD to move.<br />Arrow keys to turn. <br />
-            <span id="infoBoard"></span>
-        </span>
+        <div id="board">
+            <div>WASD to move.<br />Arrow keys to turn.</div>
+            <div id="infoBoard"></div>
+        </div>
         <div id="renderer_container"></div>
     </body>
     <style>
@@ -37,6 +38,18 @@
         }
         #dialogWrapper > div {
             flex-grow: 1;
+        }
+        #renderer_container {
+            padding-top: 3rem;
+        }
+        #board {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+        #board > div {
+            margin-left: 1rem;
+            display: inline-block;
         }
     </style>
 </html>

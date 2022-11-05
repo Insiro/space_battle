@@ -33,9 +33,7 @@ export class Player extends Object {
     update() {
         if (this.canShoot > 0) this.canShoot -= 1;
         if (this.bullettime > 0) this.bullettime -= 0.025;
-        else {
-            this.bullettime = 0;
-        }
+        else this.bullettime = 0;
         if (this.inTime > 0) this.inTime -= 0.025;
         else {
             this.speed = 0.2;
@@ -45,43 +43,28 @@ export class Player extends Object {
     angle() {
         return [-Math.sin(-this.model.rotation.y), 0, Math.cos(-this.model.rotation.y)];
     }
-    key_w() {
-        let diff_x = -Math.sin(-this.model.rotation.y) * 2 * this.speed;
-        let diff_z = Math.cos(-this.model.rotation.y) * 2 * this.speed;
+    //#region keyaction
+    key_ws(w_key = true) {
+        let speed = (w_key ? 2 : -0.5) * this.speed;
+        let diff_x = -Math.sin(-this.model.rotation.y) * speed;
+        let diff_z = Math.cos(-this.model.rotation.y) * speed;
         this.update_position(diff_x, 0, diff_z);
     }
-    key_s() {
-        let diff_x = Math.sin(-this.model.rotation.y) * 0.5 * this.speed;
-        let diff_z = -Math.cos(-this.model.rotation.y) * 0.5 * this.speed;
-        this.update_position(diff_x, 0, diff_z);
-    }
-    key_a() {
-        let diff_x = -Math.sin(this.model.rotation.y) * this.speed;
-        let diff_z = Math.cos(this.model.rotation.y) * this.speed;
+    key_ad(a_key = true) {
+        let speed = (a_key ? 1 : -1) * this.speed;
+        let diff_x = -Math.sin(this.model.rotation.y) * speed;
+        let diff_z = Math.cos(this.model.rotation.y) * speed;
         this.update_position(diff_z, 0, diff_x);
     }
-    key_d() {
-        let diff_x = Math.sin(this.model.rotation.y) * this.speed;
-        let diff_z = -Math.cos(this.model.rotation.y) * this.speed;
-        this.update_position(diff_z, 0, diff_x);
-    }
-
-    /**
-     *left key or right key
-     * @param {boolean} left
-     */
-    key_lr(left) {
-        const rotate = left ? this.turnSpeed : -this.turnSpeed;
+    key_lr(left_key = true) {
+        const rotate = left_key ? this.turnSpeed : -this.turnSpeed;
         this.model.rotation.y -= rotate;
     }
-    /**
-     * up key or down key
-     * @param {boolean} up
-     */
-    key_ud(up) {
-        const rotate_up = up ? this.hSpeed : -this.hSpeed;
+    key_ud(up_key = true) {
+        const rotate_up = up_key ? this.hSpeed : -this.hSpeed;
         this.model.rotation.x -= rotate_up;
     }
+    //#endregion
     update_position(diff_x, diff_y, diff_z) {
         this.x += diff_x;
         this.y += diff_y;
@@ -89,15 +72,16 @@ export class Player extends Object {
         this.model.position.set(this.x, this.y, this.z);
     }
     async setModel(obj3d, model) {
-        obj3d.add(model);
         this.camera.position.set(0, this.height, -10);
         this.camera.lookAt(new THREE.Vector3(0, this.height, 0));
+        obj3d.add(model);
         obj3d.add(this.camera);
         super.setModel(model);
-        this.spm = this.model;
         this.model = obj3d;
+
+        //set texture
+        if (this.modelInfo == undefined) return;
         let modelInfo = this.modelInfo;
-        console.log(modelInfo);
         let mtlInfo = { shininess: 10 };
         if (modelInfo.texture) {
             const loader = new THREE.TextureLoader();
@@ -107,7 +91,6 @@ export class Player extends Object {
             txt.wrapT = THREE.RepeatWrapping;
             mtlInfo["map"] = txt;
         } else mtlInfo["color"] = parseInt("0x" + modelInfo.color);
-
         this.model.traverse((o) => {
             if (o.isMesh && o.nameID == "Maquis_Raider") o.material = new THREE.MeshPhongMaterial(mtlInfo);
         });

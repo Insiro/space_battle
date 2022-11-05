@@ -16,11 +16,10 @@ export class Oil extends Item {
     itemcode = 1;
     scale = [1, 1, 1];
 
-
-
-    /**
-     *
-     * @param {THREE.Scene} scene
-     * @param {*} player
-     */
+    onCollision(player) {
+        player.inTime = 3;
+        if (player.hp < 3) {
+            player.hp += 1;
+        }
+    }
 }

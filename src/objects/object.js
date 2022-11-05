@@ -10,11 +10,11 @@ export class Object {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min;
     }
-    collisionCheck(object) {
+    collisionCheck(object, distance = 5) {
         let diffx = Math.abs(this.x - object.x);
         let diffy = Math.abs(this.y - object.y);
         let diffz = Math.abs(this.z - object.z);
-        return diffx < 5 && diffy < 5 && diffz < 5;
+        return diffx < distance && diffy < distance && diffz < distance;
     }
     respawn(player) {}
 }
