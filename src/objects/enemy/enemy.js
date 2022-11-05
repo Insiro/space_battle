@@ -10,7 +10,7 @@ export class Enemy extends Object {
         this.model.rotation.z -= this.rotation * 0.05;
         this.timetokill -= this.timeset;
 
-        if (this.timetokill % 0.5 == 0.0) {
+        if (this.timetokill % 0.05 == 0.0) {
             this.movX = this.getRandomInt(-20, 20) * 0.1;
             this.movY = this.getRandomInt(-20, 20) * 0.1;
             this.movZ = this.getRandomInt(-20, 20) * 0.1;
@@ -26,7 +26,7 @@ export class Enemy extends Object {
 
         if (this.collisionCheck(player)) {
             this.reset = 0;
-            this.timeset = 0.00005;
+            this.timeset = 0.00125;
             this.respawn(player);
             if (player.inTime <= 0) {
                 player.inTime = 3;
@@ -40,9 +40,9 @@ export class Enemy extends Object {
     respawn(player) {
         // respawn
         player.camera.updateMatrixWorld();
-        this.initX = this.getRandomInt(200, 400) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
-        this.initY = this.getRandomInt(200, 400) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
-        this.initZ = this.getRandomInt(200, 400) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+        this.initX = this.getRandomInt(200, 300) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+        this.initY = this.getRandomInt(200, 300) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+        this.initZ = this.getRandomInt(200, 300) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
         this.disX = player.x;
         this.disY = player.y;
         this.disZ = player.z;
@@ -51,7 +51,7 @@ export class Enemy extends Object {
         this.z = this.initZ + this.disZ;
         this.hp = this.getRandomInt(1, 5);
         this.reset = 1;
-        this.timeset += 0.0001;
-        this.timetokill = this.getRandomInt(10, 25) * 0.1;
+        this.timeset = (this.timeset+ 0.00001)>0.0016 ? 0.00125 :this.timeset+ 0.00001 ;
+        this.timetokill = this.getRandomInt(15, 25) * 0.1;
     }
 }

@@ -1,11 +1,9 @@
 import { Planet } from "./planet.js";
 export class Moon extends Planet {
-
-      /**
-       *
-       * @param {THREE.Scene} scene
-       * @param {*} player
-       */
+    /**
+     * @param {THREE.Scene} scene
+     * @param {*} player
+     */
     gltf_path = "./models/moon/scene.gltf";
     mesh = null;
     initX = 100;
@@ -29,5 +27,4 @@ export class Moon extends Planet {
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     damage = 15;
     background = 0;
-
 }

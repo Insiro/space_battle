@@ -24,12 +24,13 @@ export class Item extends Object {
             if (this.itemcode == 1) {
                 // oil
                 player.inTime = 3;
-                player.hp += 1;
+                if (player.hp < 3) {
+                    player.hp += 1;
+                }
             } else if (this.itemcode == 2) {
                 // oil
-                player.bullettime = 10;
+                player.bullettime = 15;
                 player.inTime = 3;
-                player.hp += 15;
             }
             //TODO: HIT EFFECT, collisionCheck bullet and if collision then need to respawn it.
         } else {
@@ -47,13 +48,13 @@ export class Item extends Object {
 
             camera.updateMatrixWorld();
             if (this.reset < 0) {
-                this.x = camera.position.x + this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
-                this.y = camera.position.y; //+ this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
-                this.z = camera.position.z + this.getRandomInt(20, 40) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+                this.x = player.x + this.getRandomInt(50, 200) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
+                this.y = player.y - 2;
+                this.z = player.z + this.getRandomInt(50, 200) * (this.getRandomInt(-2, 2) > 0 ? 1 : -1);
 
                 this.model.position.set(this.x, this.y, this.z);
                 this.reset = 1;
-                this.timetokill = this.getRandomInt(10, 25) * 0.1;
+                this.timetokill = this.getRandomInt(20, 35) * 0.1;
             }
         }
     }

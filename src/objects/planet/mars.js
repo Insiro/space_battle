@@ -1,17 +1,15 @@
 import { Planet } from "./planet.js";
 export class Mars extends Planet {
-
-      /**
-       *
-       * @param {THREE.Scene} scene
-       * @param {*} player
-       */
+    /**
+     * @param {THREE.Scene} scene
+     * @param {*} player
+     */
     gltf_path = "./models/mars/scene.gltf";
     mesh = null;
     initX = 300;
     initY = 0;
     initZ = 50;
-    scale = [10,10,10];
+    scale = [10, 10, 10];
     x = 50;
     y = 0;
     z = -50;
@@ -28,6 +26,5 @@ export class Mars extends Planet {
     model = null;
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     damage = 0;
-    background =1;
-
+    background = 1;
 }

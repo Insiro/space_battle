@@ -22,5 +22,5 @@ export class Alien extends Enemy {
     model = null;
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     damage = 1;
-    timeset = 0.00015;
+    timeset = 0.001;
 }

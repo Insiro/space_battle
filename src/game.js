@@ -36,7 +36,7 @@ export class Game {
     /**@type {SuperBullet[]} */
     superbullets = [];
     enemies = [new UFO(), new UFO(), new Alien(), new Alien(), new Alien(), new Alien(), new Alien(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor(), new Meteor()];
-    items = [new Oil(), new Granade()];
+    items = [new Oil(), new Granade(),new Oil(), new Granade(),new Oil(), new Granade()];
     planets = [new Moon(), new Uranus(), new Earth(), new Sun(), new Mars(), new SpacePlanet()];
     backgrounds = [];
     player;

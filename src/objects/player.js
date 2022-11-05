@@ -7,7 +7,6 @@ export class Player extends Object {
     constructor(modelInfo) {
         super();
         this.camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
-
         this.modelInfo = modelInfo;
         this.reset();
     }
@@ -26,7 +25,10 @@ export class Player extends Object {
         this.x = 0;
         this.y = 0;
         this.z = 0;
-        if (this.model) this.model.position.set(this.x, this.y, this.z);
+        if (this.model) {
+            this.model.position.set(this.x, this.y, this.z);
+            this.model.rotation.set(this.x, this.y, this.z);
+        }
     }
     update() {
         if (this.canShoot > 0) this.canShoot -= 1;
@@ -40,25 +42,28 @@ export class Player extends Object {
             this.inTime = 0;
         }
     }
+    angle() {
+        return [-Math.sin(-this.model.rotation.y), 0, Math.cos(-this.model.rotation.y)];
+    }
     key_w() {
         let diff_x = -Math.sin(-this.model.rotation.y) * 2 * this.speed;
-        let diff_z = Math.cos(-this.model.rotation.y) * this.speed;
+        let diff_z = Math.cos(-this.model.rotation.y) * 2 * this.speed;
         this.update_position(diff_x, 0, diff_z);
     }
     key_s() {
         let diff_x = Math.sin(-this.model.rotation.y) * 0.5 * this.speed;
-        let diff_z = -Math.cos(-this.model.rotation.y) * this.speed;
+        let diff_z = -Math.cos(-this.model.rotation.y) * 0.5 * this.speed;
         this.update_position(diff_x, 0, diff_z);
     }
     key_a() {
-        let diff_x = Math.sin(this.model.rotation.y + Math.PI / 1.5) * this.speed;
-        let diff_z = -Math.cos(this.model.rotation.y + Math.PI / 2) * this.speed;
-        this.update_position(diff_x, 0, diff_z);
+        let diff_x = -Math.sin(this.model.rotation.y) * this.speed;
+        let diff_z = Math.cos(this.model.rotation.y) * this.speed;
+        this.update_position(diff_z, 0, diff_x);
     }
     key_d() {
-        let diff_x = -Math.sin(this.model.rotation.y + Math.PI / 1.5) * this.speed;
-        let diff_z = Math.cos(this.model.rotation.y + Math.PI / 2) * this.speed;
-        this.update_position(diff_x, 0, diff_z);
+        let diff_x = Math.sin(this.model.rotation.y) * this.speed;
+        let diff_z = -Math.cos(this.model.rotation.y) * this.speed;
+        this.update_position(diff_z, 0, diff_x);
     }
 
     /**
@@ -82,11 +87,6 @@ export class Player extends Object {
         this.y += diff_y;
         this.z += diff_z;
         this.model.position.set(this.x, this.y, this.z);
-        console.log(this.model.rotation);
-        /**@type {THREE.PerspectiveCamera} */
-        let camera = this.camera;
-        console.log(this.camera);
-        console.log(this.model.position);
     }
     async setModel(obj3d, model) {
         obj3d.add(model);

@@ -1,17 +1,15 @@
 import { Planet } from "./planet.js";
 export class Uranus extends Planet {
-
-      /**
-       *
-       * @param {THREE.Scene} scene
-       * @param {*} player
-       */
+    /**
+     * @param {THREE.Scene} scene
+     * @param {*} player
+     */
     gltf_path = "./models/uranus/scene.gltf";
     mesh = null;
     initX = -100;
     initY = 0;
     initZ = -100;
-    scale = [15, 15,15 ];
+    scale = [15, 15, 15];
     x = 200;
     y = 100;
     z = 50;
@@ -29,5 +27,4 @@ export class Uranus extends Planet {
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     damage = 15;
     background = 0;
-
 }

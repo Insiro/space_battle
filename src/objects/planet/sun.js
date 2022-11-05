@@ -1,11 +1,9 @@
 import { Planet } from "./planet.js";
 export class Sun extends Planet {
-
-      /**
-       *
-       * @param {THREE.Scene} scene
-       * @param {*} player
-       */
+    /**
+     * @param {THREE.Scene} scene
+     * @param {*} player
+     */
     gltf_path = "./models/sun/scene.gltf";
     mesh = null;
     initX = 300;
@@ -28,6 +26,5 @@ export class Sun extends Planet {
     model = null;
     light = new THREE.PointLight(0xc4c4c4, 0.8);
     damage = 0;
-    background =1;
-
+    background = 1;
 }
