@@ -1,24 +1,18 @@
-export class Planet {
-    light = null;
-    setModel(model) {
-        model.scale.set(this.scale[0], this.scale[1], this.scale[2]);
-        model.position.set(this.x, this.y, this.z);
-        this.model = model;
-    }
-    getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
-    collisionCheck(object) {
-        let diffx = Math.abs(this.x - object.x);
-        let diffy = Math.abs(this.y - object.y);
-        let diffz = Math.abs(this.z - object.z);
-        return diffx < 15 && diffy < 15 && diffz < 15;
-    }
-    respawn(player) {}
+import { Object } from "../object.js";
+export class Planet extends Object {
+    rotation = 0.5;
+    reset = -1;
+    timetokill = 0;
+    light = new THREE.PointLight(0xc4c4c4, 0.8);
 
     move(scene, player) {
+        if (this.collisionCheck(player, 15) && this.damage > 0) {
+            if (player.inTime <= 0) {
+                player.inTime = 3;
+                player.hp -= this.damage;
+            }
+            return;
+        }
         this.model.rotation.z -= this.rotation * 0.05;
         if (this.background == 0) this.model.position.set(this.x, this.y, this.z);
         else if (this.background == 1) {
@@ -27,17 +21,5 @@ export class Planet {
         this.light.position.set(this.x + 25, this.y + 25, this.z + 25);
         scene.remove(this.light);
         scene.add(this.light);
-
-        if (this.collisionCheck(player) && this.damage > 0) {
-            if (player.inTime <= 0) {
-                player.inTime = 3;
-                player.hp -= this.damage;
-            }
-            //TODO: HIT EFFECT
-        } else {
-            let diffx = Math.abs(this.x - player.x);
-            let diffy = Math.abs(this.y - player.y);
-            let diffz = Math.abs(this.z - player.z);
-        }
     }
 }
