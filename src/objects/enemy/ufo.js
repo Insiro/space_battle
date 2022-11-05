@@ -21,8 +21,8 @@ export class UFO extends Enemy {
         timetokill = 0;
         model = null;
         light = new THREE.PointLight(0xc4c4c4, 0.8);
-        damage = 2;
-        timeset = 0.00025;
+        damage = 1;
+        timeset = 0.00125;
 
 
             /**
