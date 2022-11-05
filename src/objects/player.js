@@ -57,12 +57,16 @@ export class Player extends Object {
         this.update_position(diff_z, 0, diff_x);
     }
     key_lr(left_key = true) {
-        const rotate = left_key ? this.turnSpeed : -this.turnSpeed;
+        const rotate = left_key ? -this.turnSpeed : this.turnSpeed;
         this.model.rotation.y -= rotate;
     }
-    key_ud(up_key = true) {
-        const rotate_up = up_key ? this.hSpeed : -this.hSpeed;
-        this.model.rotation.x -= rotate_up;
+    key_ud(up = true) {
+        let up_or_down;
+
+        if (up) up_or_down = 1;
+        else up_or_down = -1;
+
+        this.update_position(0, up_or_down * this.speed, 0);
     }
     //#endregion
     update_position(diff_x, diff_y, diff_z) {
