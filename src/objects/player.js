@@ -57,7 +57,7 @@ export class Player extends Object {
         this.update_position(diff_z, 0, diff_x);
     }
     key_lr(left_key = true) {
-        const rotate = left_key ? this.turnSpeed : -this.turnSpeed;
+        const rotate = left_key ? -this.turnSpeed : this.turnSpeed;
         this.model.rotation.y -= rotate;
     }
     key_ud(up = true) {
