@@ -13,7 +13,7 @@ export class Player extends Object {
     reset() {
         this.height = 1.8;
         this.speed = 0.2;
-        this.turnSpeed = Math.PI * 0.02;
+        this.turnSpeed = Math.PI * 0.01;
         this.hSpeed = Math.PI * 0.005;
         this.canShoot = 0;
         this.hp = 3;
@@ -41,7 +41,7 @@ export class Player extends Object {
         }
     }
     angle() {
-        return [-Math.sin(-this.model.rotation.y), 0, Math.cos(-this.model.rotation.y)];
+        return [-Math.sin(-this.model.rotation.y), this.y, Math.cos(-this.model.rotation.y)];
     }
     //#region keyaction
     key_ws(w_key = true) {

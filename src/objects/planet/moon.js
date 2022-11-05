@@ -8,7 +8,5 @@ export class Moon extends Planet {
     x = 50;
     y = 0;
     z = 50;
-    hp = 3;
-    damage = 15;
-    background = 0;
+    hp = 3; 
 }

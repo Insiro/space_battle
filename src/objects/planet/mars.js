@@ -8,7 +8,5 @@ export class Mars extends Planet {
     x = 50;
     y = 0;
     z = -50;
-    hp = 3;
-    damage = 0;
-    background = 1;
+    hp = 3; 
 }
