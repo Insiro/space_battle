@@ -27,7 +27,6 @@ export class SuperBullet extends Object {
         this.alive_time--;
         for (const meteor of meteros)
             if (this.collisionCheck(meteor)) {
-                // meteor.respawn()
                 this.alive_time = 0;
                 meteor.hp -= this.damage;
                 break;

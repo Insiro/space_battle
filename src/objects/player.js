@@ -7,7 +7,6 @@ export class Player extends Object {
     constructor(modelInfo) {
         super();
         this.camera = new THREE.PerspectiveCamera(90, 1280 / 720, 0.1, 1000);
-
         this.modelInfo = modelInfo;
         this.reset();
     }
@@ -43,7 +42,9 @@ export class Player extends Object {
             this.inTime = 0;
         }
     }
-
+    angle() {
+        return [-Math.sin(-this.model.rotation.y), 0, Math.cos(-this.model.rotation.y)];
+    }
     key_w() {
         let diff_x = -Math.sin(-this.model.rotation.y) * 2 * this.speed;
         let diff_z = Math.cos(-this.model.rotation.y) * 2 * this.speed;
