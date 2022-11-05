@@ -17,9 +17,11 @@ export class SuperBullet extends Object {
         this.z = player.z;
         this.model.scale.set(20, 20, 20);
         this.model.position.set(player.x, player.y, player.z);
-        this.velocity = new THREE.Vector3(-Math.sin(player.camera.rotation.y), 0, Math.cos(player.camera.rotation.y));
+        const angle = player.angle();
+        this.velocity = new THREE.Vector3(angle[0], 0, angle[2]);
     }
     move(meteros) {
+        console.log(this.velocity);
         this.model.position.add(this.velocity);
         this.x = this.model.position.x;
         this.y = this.model.position.y;

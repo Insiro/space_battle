@@ -17,7 +17,7 @@ export class Bullet extends Object {
         this.model.scale.set(2, 2, 2);
         this.model.position.set(player.x, player.y, player.z);
         const angle = player.angle();
-        this.velocity = new THREE.Vector3(angle()[0], 0, angle()[2]);
+        this.velocity = new THREE.Vector3(angle[0], 0, angle[2]);
     }
     move(meteros) {
         console.log(this.velocity);
