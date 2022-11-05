@@ -1,6 +1,6 @@
 import { BulletBase } from "./bulletbase.js";
 export class Bullet extends BulletBase {
-    scale = [2, 2, 2];
+    scale = [5, 5, 5];
     alive_time = 100;
     damage = 1;
     color = 0xffffff;
