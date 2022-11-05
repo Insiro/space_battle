@@ -47,7 +47,8 @@ function init() {
     scene.add(light3);
     scene.add(ambientLight);
 
-    scene.background = new THREE.TextureLoader().load("res/bg.webp");
+	var stars = createStars(1000, 64);
+	scene.add(stars);
 
     window.renderer = new THREE.WebGLRenderer();
     const renderer = window.renderer;
@@ -157,3 +158,13 @@ function keyboardAction() {
 window.addEventListener("keydown", (event) => (window.game.keyboard[event.keyCode] = true));
 window.addEventListener("keyup", (event) => (window.game.keyboard[event.keyCode] = undefined));
 window.onload = init;
+
+function createStars(radius, segments) {
+    return new THREE.Mesh(
+        new THREE.SphereGeometry(radius, segments, segments), 
+        new THREE.MeshBasicMaterial({
+            map:  new THREE.TextureLoader().load(galaxy_starfield), 
+            side: THREE.BackSide
+        })
+    );
+}
