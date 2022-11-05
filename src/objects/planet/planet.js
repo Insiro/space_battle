@@ -14,7 +14,7 @@ export class Planet {
         let diffx = Math.abs(this.x - object.x);
         let diffy = Math.abs(this.y - object.y);
         let diffz = Math.abs(this.z - object.z);
-        return diffx < 20 && diffy < 20 && diffz < 20;
+        return diffx < 15 && diffy < 15 && diffz < 15;
     }
     respawn(player) {}
 
